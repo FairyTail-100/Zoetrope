@@ -332,7 +332,7 @@ describe('Phase 2: Color Correctness Golden Test Suite (Chromium)', () => {
     await runFFmpeg([
       '-y',
       '-f', 'lavfi', '-i', 'color=c=0xBEFF00:s=200x200:d=0.2',
-      '-vf', 'format=rgb24,scale=out_color_matrix=bt470bg:out_range=tv,format=yuv420p',
+      '-vf', 'format=rgb24,scale=out_color_matrix=bt601:out_range=tv,format=yuv420p',
       '-c:v', 'libx264',
       '-colorspace', 'smpte170m', '-color_primaries', 'smpte170m', '-color_trc', 'smpte170m', '-color_range', 'tv',
       clipPath,

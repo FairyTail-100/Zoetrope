@@ -19,7 +19,7 @@ Zoetrope delivers bidirectional video playback driven entirely by user scroll in
 The exact sequence tested outside this monorepo by `pnpm test:scaffold`:
 
 ```bash
-# 1. Check prerequisites (Node >= 20, pnpm, FFmpeg, ffprobe, disk space)
+# 1. Check prerequisites (Node >= 20, pnpm, FFmpeg >= 6.0, ffprobe, disk space)
 pnpm zoetrope doctor
 
 # 2. Scaffold a clean standalone project outside this repository

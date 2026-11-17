@@ -95,7 +95,19 @@ export function runPackagesInstallSmokeTest(): void {
   const distReleaseDir = path.join(repoRoot, 'dist-release');
   const tscBin = path.join(repoRoot, 'node_modules', '.bin', process.platform === 'win32' ? 'tsc.cmd' : 'tsc');
 
-  // 0. Verify npm pack --dry-run --json for all 3 public packages
+  // 0. Verify bundled dist/index.js for core and compiler have no @zoetrope/ imports
+  for (const name of ['core', 'compiler']) {
+    const bundlePath = path.join(repoRoot, 'packages', name, 'dist', 'index.js');
+    if (!fs.existsSync(bundlePath)) {
+      throw new Error(`[test:packages] Missing bundle: ${bundlePath}`);
+    }
+    const content = fs.readFileSync(bundlePath, 'utf-8');
+    if (/from\s+['"]@zoetrope\/|import\s*\(\s*['"]@zoetrope\/|@zoetrope\//.test(content)) {
+      throw new Error(`[test:packages] ${bundlePath} contains an unbundled @zoetrope/ import`);
+    }
+  }
+
+  // 0b. Verify npm pack --dry-run --json for all 3 public packages
   for (const name of ['core', 'compiler', 'react']) {
     verifyNpmPackDryRun(path.join(repoRoot, 'packages', name), `@zoetrope/${name}`);
   }

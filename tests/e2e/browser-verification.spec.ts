@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { spawnSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
@@ -7,6 +8,20 @@ test.describe('Real Browser Verification & Failure Injection (Chromium)', () => 
 
   test.beforeAll(() => {
     fs.mkdirSync(screenshotsDir, { recursive: true });
+    const distReleaseDir = path.resolve('dist-release');
+    if (
+      !fs.existsSync(path.join(distReleaseDir, 'no-build.html')) ||
+      !fs.existsSync(path.join(distReleaseDir, 'zoetrope.min.js'))
+    ) {
+      const res = spawnSync('pnpm', ['release:build'], {
+        cwd: path.resolve('.'),
+        stdio: 'inherit',
+        shell: true,
+      });
+      if (res.status !== 0) {
+        throw new Error('Failed to build dist-release/ before running E2E tests.');
+      }
+    }
   });
 
   test('5: page loads with ZERO console errors', async ({ page }) => {
@@ -75,7 +90,22 @@ test.describe('Real Browser Verification & Failure Injection (Chromium)', () => 
       await page.waitForSelector('#viewport');
       await page.waitForFunction(() => {
         const el = document.querySelector('#hud-status');
-        return el && el.textContent && el.textContent.includes('Ready');
+        if (!el || !el.textContent || !el.textContent.includes('Ready')) return false;
+        const canvas = document.querySelector<HTMLCanvasElement>('#viewport');
+        if (!canvas || canvas.width === 0 || canvas.height === 0) return false;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return false;
+        const cx = Math.floor(canvas.width / 2);
+        const cy = Math.floor(canvas.height / 2);
+        const w = Math.min(canvas.width, 100);
+        const h = Math.min(canvas.height, 100);
+        const imgData = ctx.getImageData(Math.max(0, cx - Math.floor(w / 2)), Math.max(0, cy - Math.floor(h / 2)), w, h);
+        for (let i = 0; i < imgData.data.length; i += 4) {
+          if (imgData.data[i + 3] > 0 && (imgData.data[i] > 10 || imgData.data[i + 1] > 10 || imgData.data[i + 2] > 10)) {
+            return true;
+          }
+        }
+        return false;
       }, { timeout: 10000 });
 
       const isDrawn = await page.evaluate(() => {
@@ -83,7 +113,11 @@ test.describe('Real Browser Verification & Failure Injection (Chromium)', () => 
         if (!canvas) return false;
         const ctx = canvas.getContext('2d');
         if (!ctx) return false;
-        const imgData = ctx.getImageData(0, 0, Math.min(canvas.width, 100), Math.min(canvas.height, 100));
+        const cx = Math.floor(canvas.width / 2);
+        const cy = Math.floor(canvas.height / 2);
+        const w = Math.min(canvas.width, 100);
+        const h = Math.min(canvas.height, 100);
+        const imgData = ctx.getImageData(Math.max(0, cx - Math.floor(w / 2)), Math.max(0, cy - Math.floor(h / 2)), w, h);
         for (let i = 0; i < imgData.data.length; i += 4) {
           const a = imgData.data[i + 3];
           const r = imgData.data[i];
@@ -153,7 +187,12 @@ test.describe('Real Browser Verification & Failure Injection (Chromium)', () => 
       }
     });
 
-    const totalFrames = 90;
+    const totalFrames = await page.evaluate(async () => {
+      const res = await fetch('/assets/showcase/manifest.json');
+      const manifest = await res.json();
+      return Number(manifest.metadata.totalFrames);
+    });
+    expect(totalFrames).toBeGreaterThan(1);
 
     // Independent formula written in test: round(p * (N - 1))
     const calcExpectedFrame = (progress: number, total: number) => Math.round(progress * (total - 1));
@@ -245,7 +284,7 @@ test.describe('Real Browser Verification & Failure Injection (Chromium)', () => 
     });
 
     // Intercept frame image requests and add 120ms artificial delay to allow direction reversal to catch in-flight fetches
-    await page.route('**/desktop-frames/**', async (route) => {
+    await page.route('**/desktop/**', async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 120));
       await route.continue();
     });

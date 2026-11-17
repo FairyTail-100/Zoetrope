@@ -29,8 +29,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install FFmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Setup FFmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v3
+
+      - name: Print FFmpeg version
+        run: ffmpeg -version
 
       - name: Install Playwright Chromium
         run: pnpm exec playwright install chromium --with-deps
@@ -72,8 +75,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install FFmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Setup FFmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v3
+
+      - name: Print FFmpeg version
+        run: ffmpeg -version
 
       - name: Install Playwright Chromium
         run: pnpm exec playwright install chromium --with-deps

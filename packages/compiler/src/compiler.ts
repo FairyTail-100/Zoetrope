@@ -115,6 +115,16 @@ function jpegQualityToQscale(quality: number = 85): string {
   return String(qscale);
 }
 
+/**
+ * Maps probed video color space to portable `scale` filter `in_color_matrix` names
+ * accepted by FFmpeg 6.0+ (`bt601` instead of `bt470bg`).
+ */
+export function resolveInColorMatrix(colorSpace?: string): 'bt601' | 'bt2020' | 'bt709' {
+  if (colorSpace === 'bt470bg' || colorSpace === 'smpte170m') return 'bt601';
+  if (colorSpace === 'bt2020' || colorSpace === 'bt2020nc') return 'bt2020';
+  return 'bt709';
+}
+
 export function buildFFmpegArgs(options: {
   input: string;
   outputPattern: string;
@@ -132,11 +142,7 @@ export function buildFFmpegArgs(options: {
   const format = options.format ?? 'webp';
   const quality = options.quality ?? (format === 'webp' ? 80 : 85);
 
-  const inMatrix = (options.colorSpace === 'bt470bg' || options.colorSpace === 'smpte170m')
-    ? 'bt470bg'
-    : options.colorSpace === 'bt2020' || options.colorSpace === 'bt2020nc'
-      ? 'bt2020'
-      : 'bt709';
+  const inMatrix = resolveInColorMatrix(options.colorSpace);
   const inRange = options.colorRange ?? 'tv';
   const colorOutOpts = `:in_color_matrix=${inMatrix}:in_range=${inRange}:out_range=pc`;
   const pixFmtFilter = ',format=rgb24';
@@ -328,11 +334,7 @@ export async function compile(options: CompileOptions): Promise<AnimationManifes
         const v = variantsConfig[i];
         const fitMode = v.fit ?? globalFit;
         let scaleFilter = '';
-        const inMatrix = (probeInfo.colorSpace === 'bt470bg' || probeInfo.colorSpace === 'smpte170m')
-          ? 'bt470bg'
-          : probeInfo.colorSpace === 'bt2020' || probeInfo.colorSpace === 'bt2020nc'
-            ? 'bt2020'
-            : 'bt709';
+        const inMatrix = resolveInColorMatrix(probeInfo.colorSpace);
         const inRange = probeInfo.colorRange ?? 'tv';
         const colorOutOpts = `:in_color_matrix=${inMatrix}:in_range=${inRange}:out_range=pc`;
         const pixFmtFilter = ',format=rgb24';
@@ -483,11 +485,7 @@ export async function compile(options: CompileOptions): Promise<AnimationManifes
           const ext = isAvif ? 'png' : (vFormat === 'jpeg' ? 'jpg' : vFormat);
 
           let scaleFilter = '';
-          const inMatrix = (probeInfo.colorSpace === 'bt470bg' || probeInfo.colorSpace === 'smpte170m')
-            ? 'bt470bg'
-            : probeInfo.colorSpace === 'bt2020' || probeInfo.colorSpace === 'bt2020nc'
-              ? 'bt2020'
-              : 'bt709';
+          const inMatrix = resolveInColorMatrix(probeInfo.colorSpace);
           const inRange = probeInfo.colorRange ?? 'tv';
           const colorOutOpts = `:in_color_matrix=${inMatrix}:in_range=${inRange}:out_range=pc`;
           const pixFmtFilter = ',format=rgb24';
