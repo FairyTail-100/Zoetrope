@@ -1,0 +1,60 @@
+{
+  "name": "@zoetrope/core",
+  "version": "0.1.0-rc.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@zoetrope/cache": "workspace:*",
+    "@zoetrope/decoder": "workspace:*",
+    "@zoetrope/manifest": "workspace:*",
+    "@zoetrope/motion": "workspace:*",
+    "@zoetrope/renderer": "workspace:*",
+    "@zoetrope/streaming": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc && node build.mjs"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "FairyTail-100",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FairyTail-100/Zoetrope.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/FairyTail-100/Zoetrope#readme",
+  "bugs": {
+    "url": "https://github.com/FairyTail-100/Zoetrope/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "scroll",
+    "scroll-animation",
+    "scrollytelling",
+    "video",
+    "canvas",
+    "frame-sequence",
+    "webp",
+    "ffmpeg",
+    "scrub"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  }
+}

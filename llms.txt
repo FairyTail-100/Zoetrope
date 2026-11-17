@@ -1,0 +1,26 @@
+# Zoetrope
+
+> Scroll-scrubbed video that doesn't stutter.
+
+Zoetrope pre-compiles `.mp4`/`.mov` clips with FFmpeg into multi-resolution WebP (or AVIF/JPEG) frame sequences and a `manifest.json`, then streams, caches (`DirectionalLRUCache` + `BlobCache`), decodes (`ImageBitmap`), and renders frames onto an HTML5 `<canvas>` driven by scroll progress (`Zoetrope`, `ZoetropeComposition`).
+
+## Documentation
+
+- [README](README.md): Overview, quick start, integration paths, and feature status.
+- [Integration Guide](documentation/integration-guide.md): Vanilla JS, React, Next.js, reduced-motion, and lifecycle teardown.
+- [Compiler Reference](documentation/compiler.md): `zoetrope` CLI flags and Node API (`compile`, `validateManifestFile`).
+- [Deployment Guide](documentation/deployment.md): Cache-Control and CORS headers for Netlify, Vercel, and Cloudflare.
+- [Feature Status Matrix](documentation/feature-status.md): Verified vs. experimental vs. unverified capabilities.
+- [Asset Format (CEPK)](documentation/asset-format.md): Experimental CEPK v1 binary container specification.
+- [Workspace Guide](documentation/workspace.md): Monorepo layout, `.artifacts/`, and clean commands.
+- [Manifest JSON Schema](schema/v1.json): Draft 2020-12 schema for `manifest.json`.
+
+## Agent Skills
+
+- [zoetrope-engine](skills/zoetrope-engine/SKILL.md): Architecture overview and skill router.
+- [zoetrope-compile-video](skills/zoetrope-compile-video/SKILL.md): Transcoding videos into frame sequences, variants, and manifests.
+- [zoetrope-integrate](skills/zoetrope-integrate/SKILL.md): Embedding Zoetrope in Vanilla JS, React, Next.js, and Astro.
+- [zoetrope-compose](skills/zoetrope-compose/SKILL.md): Multi-layer tracks, iris/rect masks, and DOM cues.
+- [zoetrope-deploy-cloudflare](skills/zoetrope-deploy-cloudflare/SKILL.md): Cloudflare Pages/Workers immutable caching setup.
+- [zoetrope-troubleshoot](skills/zoetrope-troubleshoot/SKILL.md): Root-cause diagnosis for stalls, color shifts, and request storms.
+- [zoetrope-new-project](skills/zoetrope-new-project/SKILL.md): Scaffolding a standalone Vite client project.

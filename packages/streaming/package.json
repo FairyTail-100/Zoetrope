@@ -1,0 +1,40 @@
+{
+  "name": "@zoetrope/streaming",
+  "version": "0.1.0-rc.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@zoetrope/manifest": "workspace:*",
+    "@zoetrope/cache": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "license": "MIT",
+  "author": "FairyTail-100",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FairyTail-100/Zoetrope.git",
+    "directory": "packages/streaming"
+  },
+  "homepage": "https://github.com/FairyTail-100/Zoetrope#readme",
+  "bugs": {
+    "url": "https://github.com/FairyTail-100/Zoetrope/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FairyTail-100/Zoetrope/main/schema/v1.json",
+  "title": "Zoetrope Animation Manifest v1",
+  "type": "object",
+  "required": ["version", "id", "metadata", "variants"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": "1.0.0" },
+    "id": { "type": "string", "minLength": 1 },
+    "metadata": {
+      "type": "object",
+      "required": ["totalFrames", "fps", "duration", "aspectRatio"],
+      "additionalProperties": false,
+      "properties": {
+        "totalFrames": { "type": "integer", "minimum": 1 },
+        "fps": { "type": "number", "exclusiveMinimum": 0 },
+        "duration": { "type": "number", "exclusiveMinimum": 0 },
+        "aspectRatio": { "type": "string" },
+        "contentHash": { "type": "string" }
+      }
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/ResolutionVariant" }
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultEasing": { "type": "string" },
+        "lut": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "number" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "ImageMimeType": {
+      "type": "string",
+      "enum": ["image/webp", "image/avif", "image/jpeg", "image/png"]
+    },
+    "PackingMode": {
+      "type": "string",
+      "enum": ["individual", "chunked", "range"]
+    },
+    "FrameRecord": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "integer", "minimum": 0 },
+        "src": { "type": "string" },
+        "byteOffset": { "type": "integer", "minimum": 0 },
+        "byteLength": { "type": "integer", "minimum": 0 },
+        "checksum": { "type": "string" },
+        "checksumType": { "type": "string", "enum": ["sha256", "crc32"] }
+      }
+    },
+    "ChunkRecord": {
+      "type": "object",
+      "required": ["index", "startFrame", "endFrame", "src", "framesCount"],
+      "additionalProperties": false,
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "startFrame": { "type": "integer", "minimum": 0 },
+        "endFrame": { "type": "integer", "minimum": 0 },
+        "src": { "type": "string" },
+        "byteLength": { "type": "integer", "minimum": 0 },
+        "framesCount": { "type": "integer", "minimum": 1 },
+        "checksum": { "type": "string" },
+        "checksumType": { "type": "string", "enum": ["sha256", "crc32"] }
+      }
+    },
+    "AnchorFrameRecord": {
+      "type": "object",
+      "required": ["frameId", "src"],
+      "additionalProperties": false,
+      "properties": {
+        "frameId": { "type": "integer", "minimum": 0 },
+        "src": { "type": "string" },
+        "byteLength": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "AnchorSet": {
+      "type": "object",
+      "required": ["step", "width", "height", "format", "frames"],
+      "additionalProperties": false,
+      "properties": {
+        "step": { "type": "integer", "minimum": 1 },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "format": { "$ref": "#/$defs/ImageMimeType" },
+        "frames": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/AnchorFrameRecord" }
+        }
+      }
+    },
+    "VariantStats": {
+      "type": "object",
+      "required": [
+        "totalBytes",
+        "minFrameBytes",
+        "medianFrameBytes",
+        "maxFrameBytes",
+        "decodedRgbaBytesPerFrame",
+        "estimatedDecodedMemoryBytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "totalBytes": { "type": "number", "minimum": 0 },
+        "minFrameBytes": { "type": "number", "minimum": 0 },
+        "medianFrameBytes": { "type": "number", "minimum": 0 },
+        "maxFrameBytes": { "type": "number", "minimum": 0 },
+        "decodedRgbaBytesPerFrame": { "type": "number", "minimum": 0 },
+        "estimatedDecodedMemoryBytes": { "type": "number", "minimum": 0 }
+      }
+    },
+    "VariantFormatSource": {
+      "type": "object",
+      "required": ["format"],
+      "additionalProperties": false,
+      "properties": {
+        "format": { "$ref": "#/$defs/ImageMimeType" },
+        "frameTemplate": { "type": "string" },
+        "frameStartIndex": { "type": "integer", "minimum": 0 },
+        "framesCount": { "type": "integer", "minimum": 1 },
+        "frames": { "type": "array", "items": { "$ref": "#/$defs/FrameRecord" } },
+        "chunks": { "type": "array", "items": { "$ref": "#/$defs/ChunkRecord" } },
+        "singlePackUrl": { "type": "string" },
+        "stats": { "$ref": "#/$defs/VariantStats" }
+      }
+    },
+    "ResolutionVariant": {
+      "type": "object",
+      "required": ["id", "minWidth", "width", "height", "format", "packing"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "minWidth": { "type": "number", "minimum": 0 },
+        "maxWidth": { "type": "number", "minimum": 0 },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "format": {
+          "oneOf": [
+            { "$ref": "#/$defs/ImageMimeType" },
+            { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/ImageMimeType" } }
+          ]
+        },
+        "formats": { "type": "array", "items": { "$ref": "#/$defs/ImageMimeType" } },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/VariantFormatSource" } },
+        "packing": { "$ref": "#/$defs/PackingMode" },
+        "chunkSize": { "type": "integer", "minimum": 1 },
+        "step": { "type": "integer", "minimum": 1 },
+        "chunks": { "type": "array", "items": { "$ref": "#/$defs/ChunkRecord" } },
+        "frames": { "type": "array", "items": { "$ref": "#/$defs/FrameRecord" } },
+        "frameTemplate": { "type": "string", "minLength": 1 },
+        "frameStartIndex": { "type": "integer", "minimum": 0 },
+        "framesCount": { "type": "integer", "minimum": 1 },
+        "singlePackUrl": { "type": "string" },
+        "stats": { "$ref": "#/$defs/VariantStats" },
+        "anchors": { "$ref": "#/$defs/AnchorSet" }
+      }
+    }
+  }
+}

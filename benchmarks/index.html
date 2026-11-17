@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Zoetrope Benchmark Harness</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: #000;
+        overflow-x: hidden;
+      }
+      #scroll-spacer {
+        height: 600vh;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+      }
+      #viewport {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scroll-spacer"></div>
+    <canvas id="viewport"></canvas>
+    <script type="module">
+      import { Zoetrope } from './engine.bundle.js';
+
+      // Long task observer
+      window.__longTasks = [];
+      try {
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.duration > 50) {
+              window.__longTasks.push({
+                startTime: entry.startTime,
+                duration: entry.duration,
+              });
+            }
+          }
+        });
+        observer.observe({ entryTypes: ['longtask'] });
+      } catch (e) {
+        // Ignored
+      }
+
+      // Benchmark telemetry collectors
+      window.__renderTimes = [];
+      window.__decodeTimes = [];
+      window.__fetchTimes = [];
+      window.__displayedFrameErrors = [];
+      window.__missedFramesCount = 0;
+      window.__firstFrameTime = null;
+      window.__peakCacheBytes = 0;
+      window.__lastCacheBytes = 0;
+      window.__errors = [];
+      window.__engine = null;
+      window.__ready = false;
+      const startTime = performance.now();
+
+      const params = new URLSearchParams(window.location.search);
+      const manifestUrl = params.get('manifest') || '/benchmarks/assets/variant-individual/manifest.json';
+      const smoothingParam = params.get('smoothing');
+      const smoothingEnabled = smoothingParam === null ? false : smoothingParam === 'true';
+      const lookaheadParam = parseInt(params.get('lookahead') || '24', 10);
+      const lookbehindParam = parseInt(params.get('lookbehind') || '8', 10);
+      const fetchConcParam = parseInt(params.get('fetchConcurrency') || '6', 10);
+      const decodeConcParam = parseInt(params.get('decodeConcurrency') || '4', 10);
+      const velocityAwareParam = params.get('velocityAware') !== 'false';
+      const flingPredParam = params.get('flingPrediction') !== 'false';
+      const preferWorkerParam = params.get('preferWorker') === 'true';
+      const resizeToCanvasParam = params.get('resizeToCanvas') === 'true';
+      const premultiplyParam = params.get('premultiplyAlpha') || 'default';
+      const colorSpaceParam = params.get('colorSpaceConversion') || 'default';
+      const anchorsParam = params.get('anchors') !== 'false';
+      const adaptiveParam = params.get('adaptive') === 'true';
+      const eagerPrefetchDecodeParam = params.get('eagerPrefetchDecode') !== 'false';
+
+      const canvas = document.querySelector('#viewport');
+
+      const engine = new Zoetrope({
+        canvas,
+        manifest: manifestUrl,
+        playback: {
+          mode: 'scroll',
+          container: window,
+          smoothing: { enabled: smoothingEnabled, tau: 28 },
+        },
+        cache: {
+          maxMemoryBytes: 350 * 1024 * 1024,
+          directionalPenalty: 2.0,
+        },
+        streaming: {
+          lookahead: lookaheadParam,
+          lookbehind: lookbehindParam,
+          concurrency: fetchConcParam,
+          velocityAware: velocityAwareParam,
+          flingPrediction: flingPredParam,
+        },
+        decoder: {
+          concurrency: decodeConcParam,
+          preferWorker: preferWorkerParam,
+          resizeToCanvas: resizeToCanvasParam,
+          premultiplyAlpha: premultiplyParam,
+          colorSpaceConversion: colorSpaceParam,
+          eagerPrefetchDecode: eagerPrefetchDecodeParam,
+        },
+        anchors: {
+          enabled: anchorsParam,
+        },
+        adaptive: {
+          enabled: adaptiveParam,
+        },
+      });
+
+      window.__telemetrySnapshots = [];
+
+      engine.on('frame', ({ frameId, telemetry }) => {
+        if (!telemetry.missedFrame && window.__firstFrameTime === null) {
+          window.__firstFrameTime = Math.round(performance.now() * 10) / 10;
+        }
+
+        window.__renderTimes.push(telemetry.renderTimeMs);
+        if (telemetry.decodeTimeMs > 0) {
+          window.__decodeTimes.push(telemetry.decodeTimeMs);
+        }
+        if (telemetry.fetchTimeMs > 0) {
+          window.__fetchTimes.push(telemetry.fetchTimeMs);
+        }
+
+        if (telemetry.missedFrame) {
+          window.__missedFramesCount++;
+        }
+
+        window.__displayedFrameErrors.push(telemetry.displayedFrameError || 0);
+        window.__telemetrySnapshots.push({
+          frameId,
+          targetFrame: telemetry.targetFrame,
+          lookaheadScheduled: telemetry.lookaheadScheduled,
+          queueDepth: telemetry.queueDepth,
+          inFlightRequests: telemetry.inFlightRequests,
+          inFlightDecodes: telemetry.inFlightDecodes,
+          cancelledRequestsCount: telemetry.cancelledRequestsCount,
+          usedAnchorFallback: telemetry.usedAnchorFallback,
+        });
+
+        const cacheBytes = telemetry.cacheSizeBytes || 0;
+        window.__lastCacheBytes = cacheBytes;
+        if (cacheBytes > window.__peakCacheBytes) {
+          window.__peakCacheBytes = cacheBytes;
+        }
+      });
+
+      engine.on('error', (err) => {
+        window.__errors.push(err.message || String(err));
+      });
+
+      try {
+        await engine.init();
+        window.__engine = engine;
+        window.__ready = true;
+      } catch (err) {
+        window.__errors.push(err.message || String(err));
+        console.error('Engine init error:', err);
+      }
+    </script>
+  </body>
+</html>

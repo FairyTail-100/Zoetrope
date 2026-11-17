@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zoetrope — Scroll-Driven Animation Pipeline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #07090e;
+        --accent: #38bdf8;
+        --accent-glow: rgba(56, 189, 248, 0.35);
+        --accent-green: #34d399;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --surface: rgba(15, 23, 42, 0.75);
+        --surface-border: rgba(255, 255, 255, 0.1);
+        --mono-font: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        overflow-x: hidden;
+        min-height: 450vh;
+      }
+
+      /* Viewport-fixed canvas stage */
+      #canvas-container {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+        background: radial-gradient(circle at center, #111827 0%, #030712 100%);
+      }
+
+      #zoetrope-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      /* Subtle grid background accent */
+      .grid-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        opacity: 0.6;
+      }
+
+      /* Telemetry Heads-Up Display */
+      .hud-panel {
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        z-index: 10;
+        background: var(--surface);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--surface-border);
+        border-radius: 14px;
+        padding: 18px 22px;
+        width: 320px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      .hud-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .hud-title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .fps-badge {
+        font-family: var(--mono-font);
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(52, 211, 153, 0.15);
+        color: var(--accent-green);
+        border: 1px solid rgba(52, 211, 153, 0.3);
+        padding: 2px 8px;
+        border-radius: 6px;
+      }
+
+      .hud-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        font-size: 12px;
+      }
+
+      .hud-stat-label {
+        color: var(--text-muted);
+        margin-bottom: 3px;
+      }
+
+      .hud-stat-value {
+        font-family: var(--mono-font);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .hud-progress-bar {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 3px;
+        margin-top: 14px;
+        overflow: hidden;
+      }
+
+      .hud-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        transition: width 0.05s linear;
+      }
+
+      /* Control Deck Panel */
+      .control-panel {
+        position: fixed;
+        bottom: 24px;
+        left: 24px;
+        z-index: 10;
+        background: var(--surface);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--surface-border);
+        border-radius: 14px;
+        padding: 16px 20px;
+        width: 340px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .control-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 13px;
+      }
+
+      .btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--surface-border);
+        color: var(--text);
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.15s ease;
+      }
+
+      .btn:hover {
+        background: rgba(56, 189, 248, 0.2);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .btn.active {
+        background: var(--accent);
+        color: #030712;
+        border-color: var(--accent);
+      }
+
+      .slider {
+        width: 140px;
+        accent-color: var(--accent);
+      }
+
+      /* Scroll Story Chapters (Overlaid on scroll track) */
+      .scroll-container {
+        position: relative;
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      .story-section {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 10vw;
+        max-width: 720px;
+      }
+
+      .section-tag {
+        font-family: var(--mono-font);
+        font-size: 13px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 12px;
+        display: inline-block;
+      }
+
+      .section-heading {
+        font-size: clamp(32px, 5vw, 56px);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 18px;
+        background: linear-gradient(135deg, #ffffff 40%, rgba(255, 255, 255, 0.6) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .section-description {
+        font-size: clamp(16px, 1.8vw, 19px);
+        line-height: 1.6;
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+
+      .scroll-down-hint {
+        position: fixed;
+        bottom: 24px;
+        right: 32px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono-font);
+        font-size: 12px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .scroll-arrow {
+        animation: bounce 1.8s infinite;
+      }
+
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(6px); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Stage Canvas -->
+    <div id="canvas-container">
+      <canvas id="zoetrope-canvas"></canvas>
+    </div>
+
+    <div class="grid-overlay"></div>
+
+    <!-- Telemetry HUD -->
+    <div class="hud-panel">
+      <div class="hud-header">
+        <span class="hud-title">Zoetrope Telemetry</span>
+        <span class="fps-badge" id="hud-fps">-- FPS</span>
+      </div>
+      <div id="hud-manifest" style="font-family: var(--mono-font); font-size: 10px; color: var(--accent); margin-bottom: 12px; word-break: break-all; opacity: 0.85;">--</div>
+
+      <div class="hud-grid">
+        <div>
+          <div class="hud-stat-label">FRAME INDEX</div>
+          <div class="hud-stat-value" id="hud-frame">-- / --</div>
+        </div>
+        <div>
+          <div class="hud-stat-label">DIRECTION</div>
+          <div class="hud-stat-value" id="hud-direction">--</div>
+        </div>
+        <div>
+          <div class="hud-stat-label">LRU MEMORY</div>
+          <div class="hud-stat-value" id="hud-memory">-- MB</div>
+        </div>
+        <div>
+          <div class="hud-stat-label">CACHE HIT RATE</div>
+          <div class="hud-stat-value" id="hud-hitrate">--%</div>
+        </div>
+        <div>
+          <div class="hud-stat-label">BLIT TIME</div>
+          <div class="hud-stat-value" id="hud-blit">-- ms</div>
+        </div>
+        <div>
+          <div class="hud-stat-label">VARIANT / PACK</div>
+          <div class="hud-stat-value" id="hud-variant">--</div>
+        </div>
+        <div>
+          <div class="hud-stat-label">AVAIL LATENCY P95</div>
+          <div class="hud-stat-value" id="hud-avail-p95">-- ms</div>
+        </div>
+        <div>
+          <div class="hud-stat-label">DECODE P50 / ERR</div>
+          <div class="hud-stat-value" id="hud-decode-err">-- ms / 0</div>
+        </div>
+        <div>
+          <div class="hud-stat-label">NETWORK REQUESTS</div>
+          <div class="hud-stat-value" id="hud-requests">0 reqs</div>
+        </div>
+      </div>
+
+      <div class="hud-progress-bar">
+        <div class="hud-progress-fill" id="hud-progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Interactive Control Deck -->
+    <div class="control-panel">
+      <div class="control-row">
+        <span>Exponential Decay (τ): <strong id="tau-val">28ms</strong></span>
+        <input type="range" id="tau-slider" class="slider" min="5" max="80" value="28" />
+      </div>
+
+      <div class="control-row">
+        <span>Smoothing Filter</span>
+        <button id="toggle-smoothing" class="btn active">ENABLED</button>
+      </div>
+
+      <div class="control-row">
+        <span>Aspect Fit</span>
+        <button id="toggle-fit" class="btn">COVER</button>
+      </div>
+
+      <div class="control-row" style="margin-bottom: 0;">
+        <button id="btn-jump-0" class="btn">0%</button>
+        <button id="btn-jump-50" class="btn">50%</button>
+        <button id="btn-jump-100" class="btn">100%</button>
+        <button id="btn-stress-test" class="btn" style="color: #f43f5e; border-color: #f43f5e;">⚡ OSCILLATE</button>
+      </div>
+    </div>
+
+    <!-- Scroll Chapters -->
+    <main class="scroll-container">
+      <section class="story-section">
+        <span class="section-tag">01 // Architecture</span>
+        <h1 class="section-heading">Ascenta Engine Rebuilt</h1>
+        <p class="section-description">
+          A framework-agnostic scroll animation engine for smooth scroll-driven
+          motion. Avoids browser seek bottlenecks and memory crashes through predictive asset
+          streaming and directional LRU caching.
+        </p>
+      </section>
+
+      <section class="story-section">
+        <span class="section-tag">02 // Memory Architecture</span>
+        <h2 class="section-heading">Directional LRU Caching</h2>
+        <p class="section-description">
+          Uncompressed 1080p frames consume 8.29MB of RGBA memory each. Our directional cache applies an
+          asymmetric penalty multiplier to frames behind the scroll cursor, retaining forward frames
+          eagerly while keeping mobile WebKit well below Jetsam eviction thresholds.
+        </p>
+      </section>
+
+      <section class="story-section">
+        <span class="section-tag">03 // Streaming Container</span>
+        <h2 class="section-heading">Asset Streaming Pipeline</h2>
+        <p class="section-description">
+          Supports individual frame WebP/AVIF streaming by default, with opt-in CEPK binary bundling.
+          Decoded asynchronously off the main thread with zero layout jank.
+        </p>
+      </section>
+
+      <section class="story-section">
+        <span class="section-tag">04 // Motion Normalization</span>
+        <h2 class="section-heading">MotionLUT Curves</h2>
+        <p class="section-description">
+          Linear scroll mapping creates unnatural visual acceleration during variable-speed camera
+          moves. Our engine evaluates a 1D monotonic motion lookup table, translating physical wheel
+          travel into calibrated visual displacement.
+        </p>
+      </section>
+    </main>
+
+    <div class="scroll-down-hint">
+      <span>Scroll to explore</span>
+      <span class="scroll-arrow">↓</span>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

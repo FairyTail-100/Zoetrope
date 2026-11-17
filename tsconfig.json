@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/manifest" },
+    { "path": "packages/cache" },
+    { "path": "packages/motion" },
+    { "path": "packages/decoder" },
+    { "path": "packages/streaming" },
+    { "path": "packages/renderer" },
+    { "path": "packages/compiler" },
+    { "path": "packages/core" },
+    { "path": "packages/react" }
+  ]
+}

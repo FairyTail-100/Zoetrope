@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Unified Artifacts & Caches
+.artifacts/
+.cache/
+.tmp-*
+**/.tmp-*
+*.log
+*.har
+.env*
+
+# Build artifacts & Releases
+dist/
+**/dist/
+dist-release/
+build/
+.next/
+.astro/
+*.tsbuildinfo
+documentation/api/
+documentation/motion-lut-curve.svg
+
+# Benchmarks output
+benchmarks/assets/
+benchmarks/results/
+benchmarks/engine.bundle.js
+
+# Test & report outputs
+test-results/
+playwright-report/
+tests/fixtures/
+tests/screenshots/
+
+# Vendor & release tarballs
+vendor/*.tgz
+**/vendor/*.tgz
+*.tgz
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Media assets & frame sequences (never committed)
+*.mp4
+*.mov
+*.webm
+*.avi
+*.mkv
+*.webp
+*.avif
+*.png
+shared/assets/
+examples/*/public/assets/showcase/
+examples/basic-scroll/public/assets/custom/
