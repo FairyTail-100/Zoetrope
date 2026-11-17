@@ -60,10 +60,43 @@ export function parseFFmpegVersion(output: string): ParsedFFmpegVersion | null {
   };
 }
 
+export interface EncoderAvailability {
+  libwebp: boolean;
+  'libaom-av1': boolean;
+  mjpeg: boolean;
+}
+
+export function parseFFmpegEncoders(output: string): EncoderAvailability {
+  const encoders: EncoderAvailability = {
+    libwebp: false,
+    'libaom-av1': false,
+    mjpeg: false,
+  };
+  for (const line of output.split(/\r?\n/)) {
+    const match = line.match(/^\s*[A-Z.]{6}\s+(libwebp|libaom-av1|mjpeg)\b/);
+    if (match) {
+      encoders[match[1] as keyof EncoderAvailability] = true;
+    }
+  }
+  return encoders;
+}
+
+export function checkFFmpegEncoders(
+  execTool: (command: string, args: string[]) => Pick<SpawnSyncReturns<Buffer>, 'status' | 'stdout' | 'stderr'> = runTool,
+  binary: string = 'ffmpeg'
+): EncoderAvailability {
+  const res = execTool(binary, ['-hide_banner', '-encoders']);
+  if (res.status !== 0 || !res.stdout) {
+    return { libwebp: false, 'libaom-av1': false, mjpeg: false };
+  }
+  return parseFFmpegEncoders(res.stdout.toString());
+}
+
 export interface DoctorCheckResult {
   name: string;
   detected: string;
   passed: boolean;
+  warning?: boolean;
   message?: string;
 }
 
@@ -146,6 +179,24 @@ export function runDoctor(deps: DoctorDeps = {}): DoctorSummary {
       : 'FFmpeg failed scale=in_color_matrix=bt601 probe (requires FFmpeg >= 6.0 with lavfi/scale support)'
   });
 
+  // 3c. FFmpeg Encoder Checks (libwebp, libaom-av1, mjpeg)
+  const encoders = ffmpegFound ? checkFFmpegEncoders(execTool) : { libwebp: false, 'libaom-av1': false, mjpeg: false };
+  const encoderList: Array<{ key: keyof EncoderAvailability; warnOnly: boolean }> = [
+    { key: 'libwebp', warnOnly: true },
+    { key: 'libaom-av1', warnOnly: true },
+    { key: 'mjpeg', warnOnly: false },
+  ];
+  for (const { key, warnOnly } of encoderList) {
+    const ok = ffmpegFound && encoders[key];
+    checks.push({
+      name: `Encoder (${key})`,
+      detected: !ffmpegFound ? 'Skipped (FFmpeg missing)' : ok ? 'OK' : 'MISSING',
+      passed: ok || (ffmpegFound && warnOnly),
+      warning: ffmpegFound && !ok && warnOnly,
+      message: !ffmpegFound || ok ? undefined : `FFmpeg encoder "${key}" is missing`,
+    });
+  }
+
   // 4. ffprobe Check
   const ffprobeCheck = execTool('ffprobe', ['-version']);
   const ffprobeOk = ffprobeCheck.status === 0;
@@ -189,7 +240,7 @@ export function printDoctorTable(summary: DoctorSummary): void {
   console.log('\nZoetrope System Diagnostics:\n');
 
   for (const c of summary.checks) {
-    const statusText = c.passed ? '[PASS]' : '[FAIL]';
+    const statusText = c.warning ? '[WARN]' : c.passed ? '[PASS]' : '[FAIL]';
     console.log(`${statusText} ${c.name}: ${c.detected}`);
   }
 
@@ -203,7 +254,7 @@ export function printDoctorTable(summary: DoctorSummary): void {
   console.log(line);
 
   for (const c of summary.checks) {
-    const statusText = c.passed ? 'PASS' : 'FAIL';
+    const statusText = c.warning ? 'WARN' : c.passed ? 'PASS' : 'FAIL';
     console.log(
       `| ${c.name.padEnd(colWidths.name)} | ${c.detected.slice(0, colWidths.detected).padEnd(colWidths.detected)} | ${statusText.padEnd(colWidths.status)} |`
     );

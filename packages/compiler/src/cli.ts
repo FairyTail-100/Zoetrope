@@ -28,7 +28,7 @@ COMPILE OPTIONS:
                           Default: desktop:1920:1080:768 and mobile:640:360:0
   --format <fmt>          Image format: webp | avif | jpeg (default: webp)
   --formats <list>        Comma-separated format list (e.g. avif,webp)
-  --quality <0-100>       Compression quality (default: 80 for webp, 32 CRF for avif, 4 for jpeg)
+  --quality <0-100>       Compression quality (default: 80 for webp, CRF 32 for avif, 85 for jpeg; higher is better for webp/jpeg, lower is better for avif CRF)
   --desktop-width <n>     Desktop variant target width in pixels (default: 1920)
   --mobile-width <n>      Mobile variant target width in pixels (default: 640)
   --fps <n>               Target frame rate (default: video source fps)
