@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as crypto from 'node:crypto';
 import { runFFmpeg } from '../packages/compiler/src/ffmpeg.js';
 import { compile } from '../packages/compiler/src/compiler.js';
 
@@ -21,30 +22,52 @@ export async function ensureShowcaseAssets(targetDir?: string): Promise<void> {
   const manifestPath = path.join(sharedDir, 'manifest.json');
 
   if (!fs.existsSync(manifestPath)) {
-    fs.mkdirSync(sharedDir, { recursive: true });
-    const tempClip = path.join(sharedDir, 'temp-testsrc.mp4');
-    await runFFmpeg([
-      '-f', 'lavfi',
-      '-i', 'testsrc=duration=1:size=320x240:rate=12',
-      '-pix_fmt', 'yuv420p',
-      '-y',
-      tempClip
-    ]);
-    await compile({
-      input: tempClip,
-      outputDir: sharedDir,
-      id: 'synthetic-showcase',
-      fps: 12,
-      format: 'webp',
-      quality: 80,
-      variants: [
-        { id: 'desktop', width: 320, height: 240, minWidth: 768 },
-        { id: 'mobile', width: 320, height: 240, minWidth: 0 }
-      ]
-    });
+    const sharedParent = path.dirname(sharedDir);
+    fs.mkdirSync(sharedParent, { recursive: true });
+    const uniqueId = `${process.pid}-${crypto.randomUUID().slice(0, 8)}`;
+    const tempClip = path.join(sharedParent, `temp-testsrc-${uniqueId}.mp4`);
+    const privateOutDir = path.join(sharedParent, `.tmp-showcase-${uniqueId}`);
+
     try {
-      fs.unlinkSync(tempClip);
-    } catch {}
+      await runFFmpeg([
+        '-f', 'lavfi',
+        '-i', 'testsrc=duration=1:size=320x240:rate=12',
+        '-pix_fmt', 'yuv420p',
+        '-y',
+        tempClip
+      ]);
+      await compile({
+        input: tempClip,
+        outputDir: privateOutDir,
+        id: 'synthetic-showcase',
+        fps: 12,
+        format: 'webp',
+        quality: 80,
+        variants: [
+          { id: 'desktop', width: 320, height: 240, minWidth: 768 },
+          { id: 'mobile', width: 320, height: 240, minWidth: 0 }
+        ]
+      });
+
+      if (!fs.existsSync(manifestPath)) {
+        try {
+          fs.renameSync(privateOutDir, sharedDir);
+        } catch (err) {
+          if (!fs.existsSync(manifestPath)) {
+            throw err;
+          }
+        }
+      }
+    } finally {
+      try {
+        fs.rmSync(tempClip, { force: true });
+      } catch { /* best-effort temp clip cleanup */ }
+      try {
+        if (fs.existsSync(privateOutDir)) {
+          fs.rmSync(privateOutDir, { recursive: true, force: true });
+        }
+      } catch { /* best-effort private temp dir cleanup */ }
+    }
   }
 
   if (targetDir && targetDir !== sharedDir) {
