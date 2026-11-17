@@ -57,7 +57,7 @@ export class WorkerPoolDecoder implements FrameDecoder {
               if (bitmap && typeof bitmap.close === 'function') {
                 try {
                   bitmap.close();
-                } catch {}
+                } catch { /* bitmap already closed for orphaned worker response */ }
               }
               return;
             }

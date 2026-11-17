@@ -89,7 +89,7 @@ export async function generateAnchorSet(options: GenerateAnchorsOptions): Promis
       watchdogTimer = setTimeout(() => {
         try {
           proc.kill('SIGKILL');
-        } catch { }
+        } catch { /* process already exited before watchdog kill */ }
         const tail = recentStderrLines.slice(-20).join('\n');
         reject(new Error(`FFmpeg anchor generation stalled: 30s watchdog triggered without progress. Stderr tail:\n${tail}`));
       }, 30000);
@@ -115,7 +115,7 @@ export async function generateAnchorSet(options: GenerateAnchorsOptions): Promis
         if (watchdogTimer) clearTimeout(watchdogTimer);
         try {
           proc.kill('SIGKILL');
-        } catch { }
+        } catch { /* process already exited before watchdog kill */ }
         reject(new Error('Anchor generation aborted'));
       });
     }

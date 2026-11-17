@@ -228,14 +228,14 @@ export async function compile(options: CompileOptions): Promise<AnimationManifes
     for (const proc of activeProcesses) {
       try {
         proc.kill('SIGKILL');
-      } catch {}
+      } catch { /* process already exited during cleanup */ }
     }
     activeProcesses.clear();
     try {
       if (fs.existsSync(tmpDir)) {
         fs.rmSync(tmpDir, { recursive: true, force: true });
       }
-    } catch {}
+    } catch { /* best-effort temp directory cleanup */ }
   };
 
   const onAbort = () => {
@@ -389,7 +389,7 @@ export async function compile(options: CompileOptions): Promise<AnimationManifes
           watchdogTimer = setTimeout(() => {
             try {
               proc.kill('SIGKILL');
-            } catch {}
+            } catch { /* process already exited before watchdog kill */ }
             const tail = recentStderrLines.slice(-20).join('\n');
             console.error(`\n❌ FFmpeg stalled: 30s watchdog triggered without progress.\nStderr tail:\n${tail}`);
             reject(new Error(`FFmpeg stalled: 30s watchdog triggered without progress. Stderr tail:\n${tail}`));
@@ -532,7 +532,7 @@ export async function compile(options: CompileOptions): Promise<AnimationManifes
               watchdogTimer = setTimeout(() => {
                 try {
                   proc.kill('SIGKILL');
-                } catch {}
+                } catch { /* process already exited before watchdog kill */ }
                 const tail = recentStderrLines.slice(-20).join('\n');
                 console.error(`\n❌ FFmpeg stalled: 30s watchdog triggered without progress.\nStderr tail:\n${tail}`);
                 reject(new Error(`FFmpeg stalled: 30s watchdog triggered without progress. Stderr tail:\n${tail}`));
@@ -922,7 +922,7 @@ export async function compile(options: CompileOptions): Promise<AnimationManifes
     // Clean up empty tmpDir
     try {
       fs.rmSync(tmpDir, { recursive: true, force: true });
-    } catch {}
+    } catch { /* best-effort temp directory cleanup after atomic rename */ }
 
     // Save build cache metadata
     saveBuildCache(outputResolved, inputResolved, buildHash, options);

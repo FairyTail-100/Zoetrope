@@ -359,7 +359,7 @@ async function run(): Promise<void> {
       const outParent = fs.existsSync(outDir) ? outDir : path.dirname(path.resolve(outDir));
       const s = fs.statfsSync(outParent);
       freeBytes = s.bsize * s.bavail;
-    } catch {}
+    } catch { /* statfsSync unavailable; fall back to Infinity */ }
 
     const isExceeding500MB = totalEstBytes > 500 * 1024 * 1024;
     const isDiskTight = freeBytes < 2 * totalEstBytes;
@@ -375,7 +375,7 @@ async function run(): Promise<void> {
       console.warn(`   - Pass --yes to confirm and proceed with compilation.\n`);
       process.exit(1);
     }
-  } catch {}
+  } catch { /* best-effort disk guard; compile() handles real failures */ }
 
   try {
     const manifest = await compile({
