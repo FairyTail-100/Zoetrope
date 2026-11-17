@@ -54,3 +54,7 @@ Thumbs.db
 shared/assets/
 examples/*/public/assets/showcase/
 examples/basic-scroll/public/assets/custom/
+
+/Videos/
+
+/.local/
