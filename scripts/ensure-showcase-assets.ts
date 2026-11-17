@@ -31,7 +31,7 @@ export async function ensureShowcaseAssets(targetDir?: string): Promise<void> {
     try {
       await runFFmpeg([
         '-f', 'lavfi',
-        '-i', 'testsrc=duration=1:size=320x240:rate=12',
+        '-i', 'testsrc=duration=3:size=320x240:rate=30',
         '-pix_fmt', 'yuv420p',
         '-y',
         tempClip
@@ -40,7 +40,7 @@ export async function ensureShowcaseAssets(targetDir?: string): Promise<void> {
         input: tempClip,
         outputDir: privateOutDir,
         id: 'synthetic-showcase',
-        fps: 12,
+        fps: 30,
         format: 'webp',
         quality: 80,
         variants: [
