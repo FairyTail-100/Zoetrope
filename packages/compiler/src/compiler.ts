@@ -15,6 +15,7 @@ import { packCEPK } from '@zoetrope/streaming';
 import { probeMedia } from './probe.js';
 import { computeMotionLut } from './motion-lut.js';
 import { generateAnchorSet } from './anchors.js';
+import { checkFFmpegEncoders } from './doctor.js';
 import { computeBuildHash, checkBuildCache, saveBuildCache } from './cache.js';
 import { findFFmpegBinary } from './ffmpeg.js';
 
@@ -109,10 +110,17 @@ function calculateMedian(arr: number[]): number {
   return sorted.length % 2 !== 0 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
 }
 
-function jpegQualityToQscale(quality: number = 85): string {
+export function jpegQualityToQscale(quality: number = 85): string {
   const clamped = Math.max(1, Math.min(100, quality));
   const qscale = Math.max(1, Math.min(31, Math.round(31 - ((clamped - 1) / 99) * 30)));
   return String(qscale);
+}
+
+export function resolveEncoderQuality(format: 'webp' | 'avif' | 'jpeg', quality?: number): number {
+  if (quality !== undefined) return quality;
+  if (format === 'webp') return 80;
+  if (format === 'avif') return 32;
+  return 85;
 }
 
 /**
@@ -140,7 +148,7 @@ export function buildFFmpegArgs(options: {
   const targetFps = options.fps ?? 30;
   const fitMode = options.fit ?? 'cover';
   const format = options.format ?? 'webp';
-  const quality = options.quality ?? (format === 'webp' ? 80 : 85);
+  const quality = resolveEncoderQuality(format, options.quality);
 
   const inMatrix = resolveInColorMatrix(options.colorSpace);
   const inRange = options.colorRange ?? 'tv';
@@ -301,6 +309,27 @@ export async function compile(options: CompileOptions): Promise<AnimationManifes
     const canUseSinglePass = variantsConfig.length > 1 && allSameFormat && allSameFps;
 
     const binary = findFFmpegBinary();
+    const requiredFormats = new Set<'webp' | 'avif' | 'jpeg'>([defaultFormat]);
+    for (const f of options.formats ?? []) requiredFormats.add(f);
+    for (const v of variantsConfig) {
+      if (v.format) requiredFormats.add(v.format);
+      for (const f of v.formats ?? []) requiredFormats.add(f);
+    }
+    const encoders = checkFFmpegEncoders(undefined, binary);
+    const formatToEncoder: Record<'webp' | 'avif' | 'jpeg', keyof typeof encoders> = {
+      webp: 'libwebp',
+      avif: 'libaom-av1',
+      jpeg: 'mjpeg',
+    };
+    for (const fmt of requiredFormats) {
+      const enc = formatToEncoder[fmt];
+      if (!encoders[enc]) {
+        const fallback = fmt === 'jpeg' ? 'webp' : 'jpeg';
+        throw new Error(
+          `Missing FFmpeg encoder "${enc}" required for format "${fmt}". Switch formats with --format ${fallback} (or install an FFmpeg build with ${enc}).`
+        );
+      }
+    }
     const manifestId = options.id ?? path.basename(inputResolved, path.extname(inputResolved));
 
     // Compute frame estimates from probe and range options
@@ -847,7 +876,7 @@ export async function compile(options: CompileOptions): Promise<AnimationManifes
         step: options.anchors,
         fps: targetFps,
         format: defaultFormat,
-        quality: 60,
+        quality: options.quality,
         start: options.start,
         end: options.end,
         signal: options.signal,

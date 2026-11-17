@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { spawn } from 'node:child_process';
 import { AnchorSet, ImageMimeType } from '@zoetrope/manifest';
 import { findFFmpegBinary } from './ffmpeg.js';
+import { jpegQualityToQscale, resolveEncoderQuality } from './compiler.js';
 
 export interface GenerateAnchorsOptions {
   input: string;
@@ -64,12 +65,13 @@ export async function generateAnchorSet(options: GenerateAnchorsOptions): Promis
   }
   args.push('-i', options.input, '-an', '-vf', vf, '-vsync', '0');
 
+  const resolvedQuality = resolveEncoderQuality(format, options.quality);
   if (format === 'webp') {
-    args.push('-c:v', 'libwebp', '-q:v', String(options.quality ?? 70));
+    args.push('-c:v', 'libwebp', '-q:v', String(resolvedQuality));
   } else if (format === 'avif') {
-    args.push('-c:v', 'libaom-av1', '-crf', '36', '-b:v', '0');
+    args.push('-c:v', 'libaom-av1', '-crf', String(resolvedQuality), '-b:v', '0');
   } else if (format === 'jpeg') {
-    args.push('-c:v', 'mjpeg', '-q:v', '4');
+    args.push('-c:v', 'mjpeg', '-q:v', jpegQualityToQscale(resolvedQuality));
   }
 
   args.push(outputPattern);
