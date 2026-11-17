@@ -36,11 +36,11 @@ This matrix provides the authoritative status of all features and subsystems. A 
 | **Astro Island Client Hydration** | `stable` | `examples/astro` | `tests/e2e/examples-and-lifecycle.spec.ts`: Astro preview server hydrates with zero console errors. |
 | **Tab Visibility Pause & Resume** | `stable` | Default (`visibilitychange`) | `tests/e2e/examples-and-lifecycle.spec.ts`: pause state and frame persistence verified on restore. |
 | **prefers-reduced-motion Poster Frame** | `stable` | Default (`respectReducedMotion: true`) | `tests/e2e/examples-and-lifecycle.spec.ts`: renders static poster frame 0 without continuous scrub. |
-| **Resize Storm Debouncing** | `stable` | Default (`debounceResizeMs: 100`) | `tests/e2e/examples-and-lifecycle.spec.ts`: 20 rapid viewport resizes in 1s handled with zero errors. |
+| **Resize Storm Debouncing** | `stable` | Default (`debounceResizeMs: 250`) | `tests/e2e/examples-and-lifecycle.spec.ts`: 20 rapid viewport resizes in 1s handled with zero errors. |
 | **BFCache Restore (pageshow)** | `stable` | Default (`pageshow`) | `tests/e2e/examples-and-lifecycle.spec.ts`: `persisted: true` re-renders canvas without errors. |
 | **Canvas Context Loss Recovery** | `stable` | Default (`contextlost`/`contextrestored`) | `tests/e2e/examples-and-lifecycle.spec.ts`: `RendererError` surfaced and redrawn upon restore. |
 | **Mobile Emulation Profile** | `stable` (emulated) | Pixel 7 Playwright device | `tests/e2e/browser-verification.spec.ts`: mobile variant selection verified in Chromium emulation. |
-| **WorkerPoolDecoder** | `experimental` | `decoder.preferWorker: true` | Dedicated Web Workers transfer ImageBitmaps; adds ~1.4ms IPC overhead over main-thread `createImageBitmap`. |
+| **WorkerPoolDecoder** | `experimental` | `decoder.preferWorker: true` | Dedicated Web Workers transfer ImageBitmaps off the main thread. |
 | **CEPK / Range Binary Packing** | `experimental` | Compiler `--packing range\|chunked` | Multi-frame chunk slicing; requires HTTP/2 byte-range server header support. |
 | **Adaptive DPR Downgrade** | `experimental` | `adaptive: { enabled: true }` | Early sliding-window latency downgrade; bidirectional recovery hysteresis in development. |
 | **WebCodecs ImageDecoder** | `experimental` | `decoder.useWebCodecs: true` | Feature-detected W3C `ImageDecoder` behind standard interface; off by default; no GOP video path. |

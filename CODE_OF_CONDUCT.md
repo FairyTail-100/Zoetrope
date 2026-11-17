@@ -32,7 +32,7 @@ This Code of Conduct applies within all community spaces, and also applies when 
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers by opening an issue at https://github.com/FairyTail-100/Zoetrope/issues. All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers via GitHub Private Vulnerability Reporting at https://github.com/FairyTail-100/Zoetrope/security/advisories/new. All complaints will be reviewed and investigated promptly and fairly.
 
 ## Attribution
 

@@ -238,7 +238,7 @@ export class Zoetrope {
         if (query.matches) {
           reducedMotionActive = true;
         }
-      } catch {}
+      } catch { /* matchMedia unavailable; keep reducedMotionActive false */ }
     }
 
     if (this.playbackMode === 'scroll' && !reducedMotionActive) {
@@ -953,7 +953,7 @@ export class Zoetrope {
             if ('close' in bitmap && typeof (bitmap as ImageBitmap).close === 'function') {
               try {
                 (bitmap as ImageBitmap).close();
-              } catch {}
+              } catch { /* bitmap already closed or detached */ }
             }
           }
         })
@@ -1057,7 +1057,7 @@ export class Zoetrope {
       if ('close' in bmp && typeof (bmp as ImageBitmap).close === 'function') {
         try {
           (bmp as ImageBitmap).close();
-        } catch {}
+        } catch { /* bitmap already closed during destroy */ }
       }
     }
     this.anchorCache.clear();

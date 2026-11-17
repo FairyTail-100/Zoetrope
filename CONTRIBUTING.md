@@ -28,7 +28,7 @@ For changes affecting packaging or standalone consumption, also run:
 
 ```bash
 pnpm pack:all
-pnpm test:core-install
+pnpm test:packages
 ```
 
 Please keep commits focused (one logical change per commit) using [Conventional Commits](https://www.conventionalcommits.org/).

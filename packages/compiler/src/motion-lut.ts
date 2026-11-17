@@ -75,7 +75,7 @@ export async function computeMotionLut(options: MotionLutOptions): Promise<numbe
       watchdogTimer = setTimeout(() => {
         try {
           proc.kill('SIGKILL');
-        } catch {}
+        } catch { /* process already exited before watchdog kill */ }
         const tail = recentStderrLines.slice(-20).join('\n');
         reject(new Error(`FFmpeg motion analysis stalled: 30s watchdog triggered. Stderr tail:\n${tail}`));
       }, 30000);
@@ -105,7 +105,7 @@ export async function computeMotionLut(options: MotionLutOptions): Promise<numbe
         if (watchdogTimer) clearTimeout(watchdogTimer);
         try {
           proc.kill('SIGKILL');
-        } catch {}
+        } catch { /* process already exited before watchdog kill */ }
         reject(new Error('Motion LUT analysis aborted'));
       });
     }

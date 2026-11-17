@@ -1,5 +1,13 @@
 # Zoetrope — Performance & Architectural Benchmarks
 
+> **Single-Machine Environment:**
+> - **CPU:** AMD Ryzen 7 260 w/ Radeon 780M Graphics
+> - **RAM:** 15.3 GB
+> - **OS:** Windows_NT 10.0.26300 x64
+> - **Node:** v26.12.1
+> - **FFmpeg:** `ffmpeg version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers`
+> - **Baseline Scope:** These measurements compare internal Zoetrope packaging/decoding configurations only; no comparison against external image-array or all-keyframe-video baselines exists yet.
+
 ---
 
 ## 1. Executive Summary & Benchmark Overview
@@ -104,7 +112,7 @@ We tested native Chromium `createImageBitmap` concurrency directly on 1080p WebP
 - **Prefetch Architecture:** `ChunkStreamer` prefetches raw array buffers and immediately pipes them into `NativeBitmapDecoder` eager decode background promises, ensuring frames enter `DirectionalLRUCache` in decoded `ImageBitmap` form before draw requests occur.
 - **Dynamic Lookahead Scaling:** Lookahead length dynamically scales with scrub velocity:
   $$L = \min(60, \text{round}(L_{\text{base}} \times (1 + \text{fps} / 30)))$$
-- **Measured Result:** Slow-scrub (30 fps) unthrottled localhost hit rate improved from 51% to **99%** (41 resident frames, availability latency p95: 0.8ms).
+- **Measured Result (Zoetrope earlier version vs current):** Slow-scrub (30 fps) unthrottled localhost hit rate changed from 51% (earlier) to **99%** (current) (41 resident frames, availability latency p95: 0.8ms).
 
 ### 4.5 Cold First-Frame Timing Breakdown (Gate A1)
 Under true cold cache conditions (`Network.setCacheDisabled({ cacheDisabled: true })`) on **Fast 3G (1.6 Mbps, 40ms RTT) + 4x CPU throttle**, measured via CDP Network and Performance instrumentation:
@@ -126,8 +134,8 @@ Under true cold cache conditions (`Network.setCacheDisabled({ cacheDisabled: tru
 > - Cold first-frame delivery takes **1236 ms**, of which 774 ms is network transfer and 18 ms is 4x throttled decoding.
 
 ### 4.6 Sequence Asset Fidelity Disclosure (Gate A1)
-- **Previous Sequence:** Synthetic FFmpeg `testsrc2` pattern with low detail (median frame size: 56.7 KB).
-- **Current Sequence:** Realistically textured footage with subtle film grain (`noise=alls=14:allf=t+u,eq=contrast=1.1:saturation=1.3`) at 1080p:
+- **Zoetrope earlier version vs current sequence (earlier):** Synthetic FFmpeg `testsrc2` pattern with low detail (median frame size: 56.7 KB).
+- **Zoetrope earlier version vs current sequence (current):** Realistically textured footage with subtle film grain (`noise=alls=14:allf=t+u,eq=contrast=1.1:saturation=1.3`) at 1080p:
   - **Min Frame Size:** 110.3 KB
   - **Median Frame Size:** 128.6 KB (exceeds the 80 KB realism floor)
   - **Max Frame Size:** 330.6 KB
@@ -178,4 +186,4 @@ Synchronous CRC32 computation over 1.4 MB CEPK chunks on the main thread contrib
    - **Why:** Incurs multi-frame chunk boundary decoding lag (cannot decode frame 0 until entire chunk is downloaded), requires auxiliary unpacking logic, and offers no throughput or frame availability advantage over HTTP/2 individual frames under realistic network conditions.
 3. **HTTP Range Requests (`range`): EXPERIMENTAL, OFF BY DEFAULT**
    - **Verdict:** **Marked as experimental, off by default, no further investment until real-network evidence.**
-   - **Why:** Requires huge manifest byte indices (32 KB+ for frame offsets) and incurs round-trip overhead on HTTP 206 range request headers. Shows worst first-frame latency on high-RTT links (221ms–225ms on Fast 3G). Strictly inferior to individual frames over modern CDNs.
+   - **Why:** Requires huge manifest byte indices (32 KB+ for frame offsets) and incurs round-trip overhead on HTTP 206 range request headers. Shows highest first-frame latency on high-RTT links (221ms–225ms on Fast 3G) compared to individual frames over modern CDNs.

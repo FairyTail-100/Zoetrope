@@ -115,6 +115,8 @@ try {
 
 We benchmarked a 1080p sequence with realistic film grain and detail across **WebP**, **AVIF**, and **JPEG** under identical source conditions. All decodes were measured inside Chromium via Playwright using native `createImageBitmap(blob)` under both unthrottled and 4x CPU throttle:
 
+> Note: These numbers come from `benchmarks/run-format-comparison.ts` on a single machine and are not checked in.
+
 | Format | Median Byte Size / Frame | Total 30-Frame Size | Encode Time / Frame | Decode 1x (p50 / p95) | Decode 4x CPU (p50 / p95) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **`WEBP`** | **127.2 KB** | 3.74 MB | 96.1 ms | 10.2 ms / 12.4 ms | **11.8 ms / 16.1 ms** |
