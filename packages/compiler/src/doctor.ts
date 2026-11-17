@@ -38,6 +38,28 @@ function runTool(command: string, args: string[]): SpawnSyncReturns<Buffer> {
   return res;
 }
 
+export const MIN_FFMPEG_MAJOR = 6;
+
+export interface ParsedFFmpegVersion {
+  raw: string;
+  major: number;
+  minor: number;
+}
+
+export function parseFFmpegVersion(output: string): ParsedFFmpegVersion | null {
+  const firstLine = output.split(/\r?\n/)[0] ?? '';
+  const match = firstLine.match(/ffmpeg version ([^ ]+)/i);
+  if (!match) return null;
+  const raw = match[1];
+  const semver = raw.match(/^n?(\d+)\.(\d+)/);
+  if (!semver) return null;
+  return {
+    raw,
+    major: parseInt(semver[1], 10),
+    minor: parseInt(semver[2], 10),
+  };
+}
+
 export interface DoctorCheckResult {
   name: string;
   detected: string;
@@ -50,7 +72,12 @@ export interface DoctorSummary {
   checks: DoctorCheckResult[];
 }
 
-export function runDoctor(): DoctorSummary {
+export interface DoctorDeps {
+  runTool?: (command: string, args: string[]) => Pick<SpawnSyncReturns<Buffer>, 'status' | 'stdout' | 'stderr'>;
+}
+
+export function runDoctor(deps: DoctorDeps = {}): DoctorSummary {
+  const execTool = deps.runTool ?? runTool;
   const checks: DoctorCheckResult[] = [];
 
   // 1. Node.js Check
@@ -65,7 +92,7 @@ export function runDoctor(): DoctorSummary {
   });
 
   // 2. pnpm Check
-  const pnpmCheck = runTool('pnpm', ['--version']);
+  const pnpmCheck = execTool('pnpm', ['--version']);
   const pnpmOk = pnpmCheck.status === 0;
   const pnpmVer = pnpmOk ? pnpmCheck.stdout.toString().trim() : 'Not installed';
   checks.push({
@@ -75,24 +102,52 @@ export function runDoctor(): DoctorSummary {
     message: pnpmOk ? undefined : 'Install pnpm via: npm install -g pnpm'
   });
 
-  // 3. FFmpeg Check
-  const ffmpegCheck = runTool('ffmpeg', ['-version']);
-  const ffmpegOk = ffmpegCheck.status === 0;
+  // 3. FFmpeg Check (>= 6.0)
+  const ffmpegCheck = execTool('ffmpeg', ['-version']);
+  const ffmpegFound = ffmpegCheck.status === 0;
   let ffmpegVer = 'Not found';
-  if (ffmpegOk) {
-    const firstLine = ffmpegCheck.stdout.toString().split('\n')[0];
-    const match = firstLine.match(/ffmpeg version ([^ ]+)/);
-    ffmpegVer = match ? `v${match[1]}` : 'Installed';
+  let ffmpegOk = false;
+  let ffmpegMsg: string | undefined;
+  if (!ffmpegFound) {
+    ffmpegMsg = 'Install FFmpeg >= 6.0 and add it to your system PATH';
+  } else {
+    const stdout = ffmpegCheck.stdout.toString();
+    const parsed = parseFFmpegVersion(stdout);
+    if (parsed) {
+      ffmpegVer = `v${parsed.raw}`;
+      ffmpegOk = parsed.major >= MIN_FFMPEG_MAJOR;
+      if (!ffmpegOk) {
+        ffmpegMsg = `FFmpeg >= ${MIN_FFMPEG_MAJOR}.0 is required (found ${ffmpegVer})`;
+      }
+    } else {
+      const firstLine = stdout.split(/\r?\n/)[0] ?? '';
+      const rawMatch = firstLine.match(/ffmpeg version ([^ ]+)/i);
+      ffmpegVer = rawMatch ? `v${rawMatch[1]}` : 'Installed';
+      ffmpegOk = true;
+    }
   }
   checks.push({
     name: 'FFmpeg Tool',
-    detected: ffmpegOk ? ffmpegVer : 'Not found in PATH',
+    detected: ffmpegFound ? ffmpegVer : 'Not found in PATH',
     passed: ffmpegOk,
-    message: ffmpegOk ? undefined : 'Install FFmpeg and add it to your system PATH'
+    message: ffmpegMsg
+  });
+
+  // 3b. FFmpeg Scale Filter Check (in_color_matrix=bt601)
+  const filterArgs = ['-f', 'lavfi', '-i', 'testsrc=d=0.1', '-vf', 'scale=in_color_matrix=bt601', '-f', 'null', '-'];
+  const filterCheck = ffmpegFound ? execTool('ffmpeg', filterArgs) : null;
+  const filterOk = Boolean(ffmpegFound && filterCheck && filterCheck.status === 0);
+  checks.push({
+    name: 'Scale Filter (bt601)',
+    detected: !ffmpegFound ? 'Skipped (FFmpeg missing)' : filterOk ? 'in_color_matrix=bt601 OK' : 'Unsupported',
+    passed: filterOk,
+    message: filterOk
+      ? undefined
+      : 'FFmpeg failed scale=in_color_matrix=bt601 probe (requires FFmpeg >= 6.0 with lavfi/scale support)'
   });
 
   // 4. ffprobe Check
-  const ffprobeCheck = runTool('ffprobe', ['-version']);
+  const ffprobeCheck = execTool('ffprobe', ['-version']);
   const ffprobeOk = ffprobeCheck.status === 0;
   let ffprobeVer = 'Not found';
   if (ffprobeOk) {

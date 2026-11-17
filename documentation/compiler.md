@@ -19,7 +19,7 @@
 
 ## 2. CLI Reference (`zoetrope`)
 
-The CLI is available directly as `zoetrope` (or `pnpm zoetrope`).
+The CLI is available directly as `zoetrope` (or `pnpm zoetrope`). Requires **Node >= 20** and **FFmpeg >= 6.0** (with `scale=in_color_matrix=bt601` support; verified by `zoetrope doctor`).
 
 ```bash
 zoetrope compile <input-video> --out <output-dir> [options]

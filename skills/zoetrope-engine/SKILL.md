@@ -9,7 +9,7 @@ Zoetrope delivers bidirectional scroll-driven video playback on HTML5 Canvas usi
 
 ## Standard 5-Step Execution Workflow
 
-1. **Check Prerequisites**: Run `pnpm zoetrope doctor` (verifies Node >=20, pnpm, FFmpeg, ffprobe, disk space).
+1. **Check Prerequisites**: Run `pnpm zoetrope doctor` (verifies Node >=20, pnpm, FFmpeg >=6.0, ffprobe, disk space).
 2. **Compile Clip**: Run preflight estimation before compilation:
    ```bash
    pnpm tsx skills/zoetrope-compile-video/scripts/preflight.ts clip.mp4 public/assets/hero

@@ -21,7 +21,7 @@ flowchart TD
   S4 --> S5["5. Deploy to Cloudflare<br><code>skills/zoetrope-deploy-cloudflare</code>"]
 ```
 
-1. **Check Prerequisites**: Run `pnpm zoetrope doctor` to ensure Node (>=20), pnpm, FFmpeg, ffprobe, and disk space are valid.
+1. **Check Prerequisites**: Run `pnpm zoetrope doctor` to ensure Node (>=20), pnpm, FFmpeg (>=6.0), ffprobe, and disk space are valid.
 2. **Compile Video**: Run preflight checks before extracting frames:
    ```bash
    pnpm tsx skills/zoetrope-compile-video/scripts/preflight.ts input.mp4 output-dir/
