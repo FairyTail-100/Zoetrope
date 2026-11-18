@@ -153,12 +153,48 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
   test('request storm & two-tier cache: 0 repeated requests forward, 0 requests idle 5s, 0 requests reverse', async ({ page }) => {
     // Monitor all network requests for frame assets
     const assetRequests: string[] = [];
+    interface TrackedRequest {
+      url: string;
+      startTime: number;
+      req: unknown;
+    }
+    const trackedRequests: TrackedRequest[] = [];
+    const inFlightRequests = new Set<unknown>();
+    let lastAssetRequestTime = performance.now();
+
     page.on('request', (req) => {
       const url = req.url();
       if (url.includes('/assets/') && (url.includes('.webp') || url.includes('.bin') || url.includes('.jpg'))) {
-        assetRequests.push(url.split('?')[0]);
+        const cleanUrl = url.split('?')[0];
+        const now = performance.now();
+        lastAssetRequestTime = now;
+        assetRequests.push(cleanUrl);
+        inFlightRequests.add(req);
+        trackedRequests.push({ url: cleanUrl, startTime: now, req });
       }
     });
+
+    page.on('requestfinished', (req) => {
+      inFlightRequests.delete(req);
+    });
+
+    page.on('requestfailed', (req) => {
+      inFlightRequests.delete(req);
+    });
+
+    // Helper: wait until asset requests are idle (no new asset request for 500 ms, with a 5 s cap)
+    const waitForAssetIdle = async (timeoutMs = 5000, idleDurationMs = 500): Promise<void> => {
+      const start = performance.now();
+      while (performance.now() - start < timeoutMs) {
+        const elapsedSinceLastReq = performance.now() - lastAssetRequestTime;
+        if (elapsedSinceLastReq >= idleDurationMs) {
+          return;
+        }
+        const remainingToIdle = idleDurationMs - elapsedSinceLastReq;
+        const remainingToTimeout = timeoutMs - (performance.now() - start);
+        await new Promise((resolve) => setTimeout(resolve, Math.min(remainingToIdle, remainingToTimeout)));
+      }
+    };
 
     await page.goto('http://127.0.0.1:4173');
     await page.waitForSelector('#zoetrope-canvas');
@@ -176,7 +212,7 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
         await new Promise((r) => setTimeout(r, 40));
       }
     });
-    await page.waitForTimeout(600);
+    await waitForAssetIdle(5000, 500);
 
     // Assert each individual frame URL was requested at most once during forward sweep (zero repeats)
     const forwardRequests = [...assetRequests];
@@ -193,9 +229,14 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
     const newRequestsDuringIdle = assetRequests.length - countBeforeIdle;
     expect(newRequestsDuringIdle).toBe(0);
 
+    // Ensure asset requests are idle before taking reverse baseline
+    await waitForAssetIdle(5000, 500);
+
     // Test REVERSE SCROLL: reverse from 100% back to 0%
-    // Since frames are cached in the 128MB BlobCache, reverse sweep generates 0 new network requests!
-    const countBeforeReverse = assetRequests.length;
+    // Since frames are cached in the 128MB BlobCache, reverse sweep generates near-zero new network requests!
+    const inFlightAtReverseStart = new Set(inFlightRequests);
+    const reverseStartTime = performance.now();
+
     await page.evaluate(async () => {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       for (let i = 19; i >= 0; i--) {
@@ -203,10 +244,18 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
         await new Promise((r) => setTimeout(r, 40));
       }
     });
-    await page.waitForTimeout(600);
+    await waitForAssetIdle(5000, 500);
 
-    const newRequestsDuringReverse = assetRequests.length - countBeforeReverse;
-    // Reverse sweep uses two-tier blob cache: near-zero new requests
+    // Count only asset requests whose start time is after the reverse sweep begins,
+    // ignoring requests already in flight at that moment.
+    const requestsDuringReverse = trackedRequests.filter(
+      (r) => r.startTime >= reverseStartTime && !inFlightAtReverseStart.has(r.req)
+    );
+    const newRequestsDuringReverse = requestsDuringReverse.length;
+
+    // Up to 2 requests can legitimately occur: intermediate frames near the start (e.g. frame 1 / frame_0002.webp)
+    // may have been skipped and purged from the lookahead queue during the rapid forward scrub, so they were
+    // not resident in BlobCache and must be fetched for the first time during reverse playback.
     expect(newRequestsDuringReverse).toBeLessThanOrEqual(2);
 
     // Verify stats from engine match requestsTotal
