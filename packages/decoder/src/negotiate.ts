@@ -1,4 +1,4 @@
-import { ImageMimeType, ResolutionVariant } from '@zoetrope/manifest';
+import { ImageMimeType, ResolutionVariant } from '@zoetropejs/manifest';
 import { FrameDecoder } from './types.js';
 
 const TRIAL_SAMPLES_B64: Record<ImageMimeType, string> = {

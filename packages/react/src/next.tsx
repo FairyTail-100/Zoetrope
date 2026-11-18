@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ZoetropeOptions, EngineTelemetry } from '@zoetrope/core';
+import { ZoetropeOptions, EngineTelemetry } from '@zoetropejs/core';
 import { useZoetrope } from './use-zoetrope.js';
 import { ZoetropeCanvas } from './zoetrope-canvas.js';
 

@@ -223,7 +223,7 @@ importers:
 
   examples/astro:
     dependencies:
-      '@zoetrope/core':
+      '@zoetropejs/core':
         specifier: workspace:*
         version: link:../../packages/core
       astro:
@@ -236,7 +236,7 @@ importers:
 
   examples/basic-scroll:
     dependencies:
-      '@zoetrope/core':
+      '@zoetropejs/core':
         specifier: workspace:*
         version: link:../../packages/core
     devDependencies:
@@ -246,7 +246,7 @@ importers:
 
   examples/layered-composition:
     dependencies:
-      '@zoetrope/core':
+      '@zoetropejs/core':
         specifier: workspace:*
         version: link:../../packages/core
     devDependencies:
@@ -256,10 +256,10 @@ importers:
 
   examples/nextjs:
     dependencies:
-      '@zoetrope/core':
+      '@zoetropejs/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@zoetrope/react':
+      '@zoetropejs/react':
         specifier: workspace:*
         version: link:../../packages/react
       next:
@@ -283,10 +283,10 @@ importers:
 
   packages/compiler:
     devDependencies:
-      '@zoetrope/manifest':
+      '@zoetropejs/manifest':
         specifier: workspace:*
         version: link:../manifest
-      '@zoetrope/streaming':
+      '@zoetropejs/streaming':
         specifier: workspace:*
         version: link:../streaming
     optionalDependencies:
@@ -296,28 +296,28 @@ importers:
 
   packages/core:
     devDependencies:
-      '@zoetrope/cache':
+      '@zoetropejs/cache':
         specifier: workspace:*
         version: link:../cache
-      '@zoetrope/decoder':
+      '@zoetropejs/decoder':
         specifier: workspace:*
         version: link:../decoder
-      '@zoetrope/manifest':
+      '@zoetropejs/manifest':
         specifier: workspace:*
         version: link:../manifest
-      '@zoetrope/motion':
+      '@zoetropejs/motion':
         specifier: workspace:*
         version: link:../motion
-      '@zoetrope/renderer':
+      '@zoetropejs/renderer':
         specifier: workspace:*
         version: link:../renderer
-      '@zoetrope/streaming':
+      '@zoetropejs/streaming':
         specifier: workspace:*
         version: link:../streaming
 
   packages/decoder:
     dependencies:
-      '@zoetrope/manifest':
+      '@zoetropejs/manifest':
         specifier: workspace:*
         version: link:../manifest
 
@@ -327,7 +327,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@zoetrope/core':
+      '@zoetropejs/core':
         specifier: workspace:*
         version: link:../core
       react:
@@ -338,10 +338,10 @@ importers:
 
   packages/streaming:
     dependencies:
-      '@zoetrope/cache':
+      '@zoetropejs/cache':
         specifier: workspace:*
         version: link:../cache
-      '@zoetrope/manifest':
+      '@zoetropejs/manifest':
         specifier: workspace:*
         version: link:../manifest
 

@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@zoetrope/core": "workspace:*"
+    "@zoetropejs/core": "workspace:*"
   },
   "devDependencies": {
     "vite": "^6.2.0"

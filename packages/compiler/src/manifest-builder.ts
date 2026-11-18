@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { AnimationManifest, ResolutionVariant, validateManifest } from '@zoetrope/manifest';
+import { AnimationManifest, ResolutionVariant, validateManifest } from '@zoetropejs/manifest';
 
 export interface ManifestBuilderOptions {
   id: string;

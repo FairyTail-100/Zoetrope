@@ -1,5 +1,5 @@
 {
-  "name": "@zoetrope/react",
+  "name": "@zoetropejs/react",
   "version": "0.1.0-rc.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -8,7 +8,7 @@
     "react": ">=18.0.0"
   },
   "dependencies": {
-    "@zoetrope/core": "workspace:*"
+    "@zoetropejs/core": "workspace:*"
   },
   "scripts": {
     "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc"

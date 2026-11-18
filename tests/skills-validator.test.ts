@@ -229,7 +229,7 @@ describe('Part 2 & 3: Agent Skills Specification & Verification', () => {
 
       const pkg = JSON.parse(pkgRaw);
       expect(pkg.name).toBe('scaffold-test-project');
-      expect(pkg.dependencies['@zoetrope/core']).toMatch(/^file:\.\/vendor\//);
+      expect(pkg.dependencies['@zoetropejs/core']).toMatch(/^file:\.\/vendor\//);
     } finally {
       if (fs.existsSync(testProjectDir)) fs.rmSync(testProjectDir, { recursive: true, force: true });
     }

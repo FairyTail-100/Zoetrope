@@ -3,23 +3,23 @@ import {
   ResolutionVariant,
   validateManifest,
   selectVariantWithHysteresis,
-} from '@zoetrope/manifest';
-import { DirectionalLRUCache, CacheStats } from '@zoetrope/cache';
+} from '@zoetropejs/manifest';
+import { DirectionalLRUCache, CacheStats } from '@zoetropejs/cache';
 import {
   ExponentialSmoother,
   VelocityTracker,
   MotionLUT,
   ScrollDriver,
-} from '@zoetrope/motion';
+} from '@zoetropejs/motion';
 import {
   FrameDecoder,
   createDecoder,
   DecodedFrameTarget,
   negotiateVariantFormat,
   DecodeRequestOptions,
-} from '@zoetrope/decoder';
-import { ChunkStreamer } from '@zoetrope/streaming';
-import { CanvasRenderer } from '@zoetrope/renderer';
+} from '@zoetropejs/decoder';
+import { ChunkStreamer } from '@zoetropejs/streaming';
+import { CanvasRenderer } from '@zoetropejs/renderer';
 import {
   ZoetropeOptions,
   EngineTelemetry,

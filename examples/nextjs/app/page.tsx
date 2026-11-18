@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { NextZoetropePlayer } from '@zoetrope/react';
-import type { EngineTelemetry } from '@zoetrope/core';
+import { NextZoetropePlayer } from '@zoetropejs/react';
+import type { EngineTelemetry } from '@zoetropejs/core';
 
 export default function Page() {
   const [telemetry, setTelemetry] = useState<EngineTelemetry | null>(null);

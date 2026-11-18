@@ -1,12 +1,12 @@
 {
-  "name": "@zoetrope/decoder",
+  "name": "@zoetropejs/decoder",
   "version": "0.1.0-rc.1",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "@zoetrope/manifest": "workspace:*"
+    "@zoetropejs/manifest": "workspace:*"
   },
   "scripts": {
     "build": "tsc"

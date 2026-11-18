@@ -56,10 +56,10 @@ Run these from the repository root:
 pnpm build              # Build all workspace packages and benchmark bundle
 pnpm typecheck          # Run tsc --build across all project references
 pnpm lint               # Run ESLint across packages/ and tests/
-pnpm test               # Build @zoetrope/manifest and run Vitest suite
+pnpm test               # Build @zoetropejs/manifest and run Vitest suite
 pnpm test:skills        # Validate all 7 skills against CLI flags, paths, and tests
 pnpm pack:all           # Pack release tarballs into dist-release/
-pnpm test:packages      # Verify standalone @zoetrope/core, @zoetrope/compiler, and @zoetrope/react tarballs
+pnpm test:packages      # Verify standalone @zoetropejs/core, @zoetropejs/compiler, and @zoetropejs/react tarballs
 pnpm test:scaffold      # Scaffold and verify an external Vite app in Chromium
 pnpm test:e2e           # Build examples and run Playwright E2E suite
 ```

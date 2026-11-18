@@ -1,7 +1,7 @@
 import * as crypto from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { AnimationManifest } from '@zoetrope/manifest';
+import { AnimationManifest } from '@zoetropejs/manifest';
 
 export const COMPILER_VERSION = '1.0.0';
 

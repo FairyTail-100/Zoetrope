@@ -79,7 +79,7 @@ function verifyPackedManifestNoWorkspaceSpecifiers(tarballPath: string, pkgLabel
     }
   }
 
-  if (pkgLabel === '@zoetrope/react') {
+  if (pkgLabel === '@zoetropejs/react') {
     console.log(`[test:packages] Packed ${pkgLabel} dependencies:`, JSON.stringify(pkg.dependencies ?? {}));
   }
 }
@@ -95,7 +95,7 @@ export function runPackagesInstallSmokeTest(): void {
   const distReleaseDir = path.join(repoRoot, 'dist-release');
   const tscBin = path.join(repoRoot, 'node_modules', '.bin', process.platform === 'win32' ? 'tsc.cmd' : 'tsc');
 
-  // 0. Verify bundled dist/index.js for core and compiler have no @zoetrope/ imports
+  // 0. Verify bundled dist/index.js for core and compiler have no @zoetropejs/ imports
   for (const name of ['core', 'compiler']) {
     const bundlePath = path.join(repoRoot, 'packages', name, 'dist', 'index.js');
     if (!fs.existsSync(bundlePath)) {
@@ -103,32 +103,32 @@ export function runPackagesInstallSmokeTest(): void {
     }
     const content = fs.readFileSync(bundlePath, 'utf-8');
     if (/from\s+['"]@zoetrope\/|import\s*\(\s*['"]@zoetrope\/|@zoetrope\//.test(content)) {
-      throw new Error(`[test:packages] ${bundlePath} contains an unbundled @zoetrope/ import`);
+      throw new Error(`[test:packages] ${bundlePath} contains an unbundled @zoetropejs/ import`);
     }
   }
 
   // 0b. Verify npm pack --dry-run --json for all 3 public packages
   for (const name of ['core', 'compiler', 'react']) {
-    verifyNpmPackDryRun(path.join(repoRoot, 'packages', name), `@zoetrope/${name}`);
+    verifyNpmPackDryRun(path.join(repoRoot, 'packages', name), `@zoetropejs/${name}`);
   }
 
-  const coreTarball = path.join(distReleaseDir, `zoetrope-core-${version}.tgz`);
-  const compilerTarball = path.join(distReleaseDir, `zoetrope-compiler-${version}.tgz`);
-  const reactTarball = path.join(distReleaseDir, `zoetrope-react-${version}.tgz`);
+  const coreTarball = path.join(distReleaseDir, `zoetropejs-core-${version}.tgz`);
+  const compilerTarball = path.join(distReleaseDir, `zoetropejs-compiler-${version}.tgz`);
+  const reactTarball = path.join(distReleaseDir, `zoetropejs-react-${version}.tgz`);
 
   if (!fs.existsSync(coreTarball) || !fs.existsSync(compilerTarball) || !fs.existsSync(reactTarball)) {
     console.log('[test:packages] Missing tarballs in dist-release/, running pnpm pack:all...');
     runCmd('pnpm pack:all', repoRoot);
   }
 
-  verifyPackedManifestNoWorkspaceSpecifiers(coreTarball, '@zoetrope/core');
-  verifyPackedManifestNoWorkspaceSpecifiers(compilerTarball, '@zoetrope/compiler');
-  verifyPackedManifestNoWorkspaceSpecifiers(reactTarball, '@zoetrope/react');
+  verifyPackedManifestNoWorkspaceSpecifiers(coreTarball, '@zoetropejs/core');
+  verifyPackedManifestNoWorkspaceSpecifiers(compilerTarball, '@zoetropejs/compiler');
+  verifyPackedManifestNoWorkspaceSpecifiers(reactTarball, '@zoetropejs/react');
 
-  // (a) Standalone @zoetrope/core
+  // (a) Standalone @zoetropejs/core
   const coreDir = makeTempDir('zoetrope-test-core-');
   try {
-    console.log(`\n[test:packages] (a) Testing @zoetrope/core alone in ${coreDir}`);
+    console.log(`\n[test:packages] (a) Testing @zoetropejs/core alone in ${coreDir}`);
     fs.writeFileSync(
       path.join(coreDir, 'package.json'),
       JSON.stringify({ name: 'test-core-alone', version: '1.0.0', type: 'module' }, null, 2)
@@ -136,7 +136,7 @@ export function runPackagesInstallSmokeTest(): void {
     runCmd(`pnpm add "${coreTarball}" --ignore-workspace`, coreDir);
     fs.writeFileSync(
       path.join(coreDir, 'verify.mjs'),
-      `import { Zoetrope, ZoetropeComposition } from '@zoetrope/core';
+      `import { Zoetrope, ZoetropeComposition } from '@zoetropejs/core';
 if (typeof Zoetrope !== 'function' || typeof ZoetropeComposition !== 'function') throw new Error('Missing exports');
 console.log('[test:packages] (a) runtime OK');
 `
@@ -151,7 +151,7 @@ console.log('[test:packages] (a) runtime OK');
     );
     fs.writeFileSync(
       path.join(coreDir, 'verify.ts'),
-      `import { Zoetrope, ZoetropeComposition, type ZoetropeOptions } from '@zoetrope/core';
+      `import { Zoetrope, ZoetropeComposition, type ZoetropeOptions } from '@zoetropejs/core';
 export function check(canvas: HTMLCanvasElement) {
   const opts: ZoetropeOptions = { canvas, manifest: '/manifest.json' };
   return { a: new Zoetrope(opts), b: new ZoetropeComposition({ canvas, layers: [] }) };
@@ -159,15 +159,15 @@ export function check(canvas: HTMLCanvasElement) {
 `
     );
     runCmd(`"${tscBin}" --noEmit`, coreDir);
-    console.log('[test:packages] (a) @zoetrope/core standalone runtime + tsc --noEmit PASSED');
+    console.log('[test:packages] (a) @zoetropejs/core standalone runtime + tsc --noEmit PASSED');
   } finally {
     fs.rmSync(coreDir, { recursive: true, force: true });
   }
 
-  // (b) Standalone @zoetrope/compiler
+  // (b) Standalone @zoetropejs/compiler
   const compilerDir = makeTempDir('zoetrope-test-compiler-');
   try {
-    console.log(`\n[test:packages] (b) Testing @zoetrope/compiler alone in ${compilerDir}`);
+    console.log(`\n[test:packages] (b) Testing @zoetropejs/compiler alone in ${compilerDir}`);
     fs.writeFileSync(
       path.join(compilerDir, 'package.json'),
       JSON.stringify({ name: 'test-compiler-alone', version: '1.0.0', type: 'module' }, null, 2)
@@ -176,22 +176,22 @@ export function check(canvas: HTMLCanvasElement) {
     runCmd('npx zoetrope --help', compilerDir);
     const docRes = runCmd('npx zoetrope doctor', compilerDir, true);
     console.log(`[test:packages] (b) zoetrope doctor exited with code ${docRes.status}`);
-    console.log('[test:packages] (b) @zoetrope/compiler standalone CLI PASSED');
+    console.log('[test:packages] (b) @zoetropejs/compiler standalone CLI PASSED');
   } finally {
     fs.rmSync(compilerDir, { recursive: true, force: true });
   }
 
-  // (c) @zoetrope/core + @zoetrope/react + react + react-dom
+  // (c) @zoetropejs/core + @zoetropejs/react + react + react-dom
   const reactDir = makeTempDir('zoetrope-test-react-');
   try {
-    console.log(`\n[test:packages] (c) Testing @zoetrope/core + @zoetrope/react in ${reactDir}`);
+    console.log(`\n[test:packages] (c) Testing @zoetropejs/core + @zoetropejs/react in ${reactDir}`);
     fs.writeFileSync(
       path.join(reactDir, 'package.json'),
       JSON.stringify({ name: 'test-react-alone', version: '1.0.0', type: 'module' }, null, 2)
     );
     fs.writeFileSync(
       path.join(reactDir, 'pnpm-workspace.yaml'),
-      `overrides:\n  "@zoetrope/core": "file:${coreTarball.replace(/\\/g, '/')}"\n`
+      `overrides:\n  "@zoetropejs/core": "file:${coreTarball.replace(/\\/g, '/')}"\n`
     );
     runCmd(`pnpm add "${coreTarball}" "${reactTarball}" react@19.3.1 react-dom@19.3.1 @types/react@19.3.0`, reactDir);
     fs.writeFileSync(
@@ -210,7 +210,7 @@ export function check(canvas: HTMLCanvasElement) {
     );
     fs.writeFileSync(
       path.join(reactDir, 'verify.tsx'),
-      `import { ZoetropeCanvas, NextZoetropePlayer, useZoetrope } from '@zoetrope/react';
+      `import { ZoetropeCanvas, NextZoetropePlayer, useZoetrope } from '@zoetropejs/react';
 export function Demo() {
   const { canvasRef } = useZoetrope({ manifest: '/manifest.json' });
   return (
@@ -223,7 +223,7 @@ export function Demo() {
 `
     );
     runCmd(`"${tscBin}" --noEmit`, reactDir);
-    console.log('[test:packages] (c) @zoetrope/react + @zoetrope/core tsc --noEmit PASSED');
+    console.log('[test:packages] (c) @zoetropejs/react + @zoetropejs/core tsc --noEmit PASSED');
   } finally {
     fs.rmSync(reactDir, { recursive: true, force: true });
   }

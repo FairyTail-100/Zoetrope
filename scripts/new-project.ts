@@ -26,7 +26,7 @@ export function scaffoldProject(options: ScaffoldOptions): string {
   if (options.published) {
     // Mode B: published npm ranges (unverified until published to registry)
     dependencies = {
-      '@zoetrope/core': `^${version}`
+      '@zoetropejs/core': `^${version}`
     };
   } else {
     // Mode A (Default): Portable vendor tarballs that work anywhere, including outside this monorepo
@@ -35,13 +35,13 @@ export function scaffoldProject(options: ScaffoldOptions): string {
 
     // Ensure release tarballs exist
     const requiredTarballs = [
-      `zoetrope-core-${version}.tgz`,
-      `zoetrope-manifest-${version}.tgz`,
-      `zoetrope-cache-${version}.tgz`,
-      `zoetrope-motion-${version}.tgz`,
-      `zoetrope-decoder-${version}.tgz`,
-      `zoetrope-streaming-${version}.tgz`,
-      `zoetrope-renderer-${version}.tgz`
+      `zoetropejs-core-${version}.tgz`,
+      `zoetropejs-manifest-${version}.tgz`,
+      `zoetropejs-cache-${version}.tgz`,
+      `zoetropejs-motion-${version}.tgz`,
+      `zoetropejs-decoder-${version}.tgz`,
+      `zoetropejs-streaming-${version}.tgz`,
+      `zoetropejs-renderer-${version}.tgz`
     ];
 
     const hasAllTarballs = requiredTarballs.every(t => fs.existsSync(path.join(distReleaseDir, t)));
@@ -64,7 +64,7 @@ export function scaffoldProject(options: ScaffoldOptions): string {
     }
 
     dependencies = {
-      '@zoetrope/core': `file:./vendor/zoetrope-core-${version}.tgz`
+      '@zoetropejs/core': `file:./vendor/zoetropejs-core-${version}.tgz`
     };
   }
 
@@ -142,7 +142,7 @@ export default defineConfig({
   fs.writeFileSync(path.join(targetDir, 'index.html'), indexHtml, 'utf-8');
 
   // 6. src/main.ts
-  const mainTs = `import { Zoetrope } from '@zoetrope/core';
+  const mainTs = `import { Zoetrope } from '@zoetropejs/core';
 
 async function init() {
   const canvas = document.querySelector<HTMLCanvasElement>('#viewport');

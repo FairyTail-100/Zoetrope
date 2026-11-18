@@ -9,19 +9,19 @@ Embed Zoetrope in any web runtime using its HTML5 canvas renderer.
 
 ## Package Installation
 
-In your consumer application, install `@zoetrope/core`:
+In your consumer application, install `@zoetropejs/core`:
 ```bash
 # Portable vendor tarballs from dist-release/:
 pnpm add file:./vendor/zoetrope-core-<version>.tgz
 
 # Or after npm publishing (unverified until published):
-pnpm add @zoetrope/core
+pnpm add @zoetropejs/core
 ```
 
 ## 1. Vanilla HTML / Canvas
 
 ```typescript
-import { Zoetrope } from '@zoetrope/core';
+import { Zoetrope } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#viewport')!;
 
@@ -48,11 +48,11 @@ window.addEventListener('beforeunload', () => {
 });
 ```
 
-## 2. React Component (`@zoetrope/react`)
+## 2. React Component (`@zoetropejs/react`)
 
 ```tsx
 import React from 'react';
-import { NextZoetropePlayer } from '@zoetrope/react';
+import { NextZoetropePlayer } from '@zoetropejs/react';
 
 export function HeroScroll() {
   return (
@@ -79,7 +79,7 @@ Always use `next/dynamic` with `{ ssr: false }` to avoid canvas hydration issues
 import dynamic from 'next/dynamic';
 
 const NextZoetropePlayer = dynamic(
-  () => import('@zoetrope/react').then((mod) => mod.NextZoetropePlayer),
+  () => import('@zoetropejs/react').then((mod) => mod.NextZoetropePlayer),
   { ssr: false }
 );
 ```

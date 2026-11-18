@@ -10,7 +10,7 @@ The `ZoetropeComposition` coordinator orchestrates multiple video sequences on a
 ## Basic Multi-Layer Setup
 
 ```typescript
-import { ZoetropeComposition, CompositionLayerConfig, Cue } from '@zoetrope/core';
+import { ZoetropeComposition, CompositionLayerConfig, Cue } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#composition-canvas')!;
 

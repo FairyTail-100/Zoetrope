@@ -1,3 +1,3 @@
-# @zoetrope/motion
+# @zoetropejs/motion
 
 Internal package of Zoetrope.

@@ -1,5 +1,5 @@
 {
-  "name": "@zoetrope/renderer",
+  "name": "@zoetropejs/renderer",
   "version": "0.1.0-rc.1",
   "private": true,
   "type": "module",

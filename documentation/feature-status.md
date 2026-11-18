@@ -32,7 +32,7 @@ This matrix provides the authoritative status of all features and subsystems. A 
 | **NativeBitmapDecoder & <img> Fallback** | `stable` | Default (`createImageBitmap`) | `tests/failure-paths.test.ts` & `tests/engine.test.ts`: background decode off main thread, fallback on error. |
 | **Format Negotiation (AVIF $\to$ WebP)** | `stable` | Multi-format manifest sources | `tests/e2e/browser-verification.spec.ts`: simulated AVIF decode failure falls back to WebP seamlessly. |
 | **Layered Composition & DOM Cues** | `stable` | `new ZoetropeComposition(...)` | `tests/composition.test.ts` & `tests/e2e/examples-and-lifecycle.spec.ts`: multi-track compositing, iris mask expansion. |
-| **React & Next.js Production Adapter** | `stable` | `@zoetrope/react` | `tests/e2e/examples-and-lifecycle.spec.ts`: Next.js production build (`next start`) with zero hydration warnings. |
+| **React & Next.js Production Adapter** | `stable` | `@zoetropejs/react` | `tests/e2e/examples-and-lifecycle.spec.ts`: Next.js production build (`next start`) with zero hydration warnings. |
 | **Astro Island Client Hydration** | `stable` | `examples/astro` | `tests/e2e/examples-and-lifecycle.spec.ts`: Astro preview server hydrates with zero console errors. |
 | **Tab Visibility Pause & Resume** | `stable` | Default (`visibilitychange`) | `tests/e2e/examples-and-lifecycle.spec.ts`: pause state and frame persistence verified on restore. |
 | **prefers-reduced-motion Poster Frame** | `stable` | Default (`respectReducedMotion: true`) | `tests/e2e/examples-and-lifecycle.spec.ts`: renders static poster frame 0 without continuous scrub. |

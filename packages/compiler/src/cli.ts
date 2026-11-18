@@ -222,7 +222,7 @@ async function run(): Promise<void> {
   </div>
 
   <script type="module">
-    import { Zoetrope } from '@zoetrope/core';
+    import { Zoetrope } from '@zoetropejs/core';
 
     const engine = new Zoetrope({
       canvas: document.getElementById('zoetrope-canvas'),

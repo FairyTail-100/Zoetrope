@@ -1,4 +1,4 @@
-# @zoetrope/core
+# @zoetropejs/core
 
 Runtime engine for Zoetrope: bidirectional scroll-driven HTML5 Canvas video playback (`Zoetrope`) and multi-layer timeline/mask composition (`ZoetropeComposition`).
 
@@ -13,7 +13,7 @@ pnpm add file:./dist-release/zoetrope-core-0.1.0-rc.1.tgz
 ## Minimal Usage
 
 ```typescript
-import { Zoetrope } from '@zoetrope/core';
+import { Zoetrope } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#zoetrope-canvas')!;
 const engine = new Zoetrope({

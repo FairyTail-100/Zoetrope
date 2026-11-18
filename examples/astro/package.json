@@ -9,7 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@zoetrope/core": "workspace:*",
+    "@zoetropejs/core": "workspace:*",
     "astro": "^7.4.5"
   },
   "devDependencies": {

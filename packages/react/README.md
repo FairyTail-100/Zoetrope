@@ -1,4 +1,4 @@
-# @zoetrope/react
+# @zoetropejs/react
 
 React hooks and components (`useZoetrope`, `ZoetropeCanvas`, and SSR-safe `NextZoetropePlayer`) for Zoetrope.
 
@@ -18,7 +18,7 @@ pnpm add file:./dist-release/zoetrope-core-0.1.0-rc.1.tgz file:./dist-release/zo
 import dynamic from 'next/dynamic';
 
 const NextZoetropePlayer = dynamic(
-  () => import('@zoetrope/react').then((m) => m.NextZoetropePlayer),
+  () => import('@zoetropejs/react').then((m) => m.NextZoetropePlayer),
   { ssr: false }
 );
 

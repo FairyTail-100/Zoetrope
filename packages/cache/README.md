@@ -1,3 +1,3 @@
-# @zoetrope/cache
+# @zoetropejs/cache
 
 Internal package of Zoetrope.

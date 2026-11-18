@@ -8,10 +8,10 @@ Zoetrope delivers bidirectional video playback driven entirely by user scroll in
 
 | Component | Monorepo Package | Purpose |
 | :--- | :--- | :--- |
-| **Asset Compiler** | `@zoetrope/compiler` | Multi-resolution responsive frame extractor with color fidelity (BT.709/601) and disk guard. |
-| **Playback Engine**| `@zoetrope/core` | Request horizon prefetcher, two-tier LRU cache, and RAF-driven canvas renderer. |
-| **Composition** | `@zoetrope/core` | Multi-track timeline sequencing, dynamic iris circle masks, and scroll-synced DOM cues. |
-| **Adapters** | `@zoetrope/react` | Ready-to-use wrappers for React and Next.js (`NextZoetropePlayer`, SSR-safe dynamic import). Astro is provided as an example in `examples/astro`. |
+| **Asset Compiler** | `@zoetropejs/compiler` | Multi-resolution responsive frame extractor with color fidelity (BT.709/601) and disk guard. |
+| **Playback Engine**| `@zoetropejs/core` | Request horizon prefetcher, two-tier LRU cache, and RAF-driven canvas renderer. |
+| **Composition** | `@zoetropejs/core` | Multi-track timeline sequencing, dynamic iris circle masks, and scroll-synced DOM cues. |
+| **Adapters** | `@zoetropejs/react` | Ready-to-use wrappers for React and Next.js (`NextZoetropePlayer`, SSR-safe dynamic import). Astro is provided as an example in `examples/astro`. |
 | **Agent Skills** | `skills/` | 7 modular agent skills for autonomous compilation, integration, debugging, and deployment. |
 
 ## Quick Start (Verified Standalone Sequence)
@@ -75,7 +75,7 @@ flowchart LR
 ### Path B: Vite / Vanilla TypeScript
 
 ```typescript
-import { Zoetrope } from '@zoetrope/core';
+import { Zoetrope } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#viewport')!;
 const engine = new Zoetrope({
@@ -87,14 +87,14 @@ await engine.init();
 window.addEventListener('beforeunload', () => engine.destroy());
 ```
 
-### Path C: React / Next.js (`@zoetrope/react`)
+### Path C: React / Next.js (`@zoetropejs/react`)
 
 ```tsx
 import dynamic from 'next/dynamic';
 
 // Next.js SSR-safe dynamic wrapper
 const NextZoetropePlayer = dynamic(
-  () => import('@zoetrope/react').then((m) => m.NextZoetropePlayer),
+  () => import('@zoetropejs/react').then((m) => m.NextZoetropePlayer),
   { ssr: false }
 );
 

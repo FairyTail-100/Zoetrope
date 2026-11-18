@@ -1,5 +1,5 @@
-import { AnimationManifest, ResolutionVariant } from '@zoetrope/manifest';
-import { FitMode } from '@zoetrope/renderer';
+import { AnimationManifest, ResolutionVariant } from '@zoetropejs/manifest';
+import { FitMode } from '@zoetropejs/renderer';
 
 export class ZoetropeError extends Error {
   constructor(message: string, public readonly code: string, public readonly cause?: unknown) {

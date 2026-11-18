@@ -1,5 +1,5 @@
 {
-  "name": "@zoetrope/core",
+  "name": "@zoetropejs/core",
   "version": "0.1.0-rc.1",
   "type": "module",
   "main": "./dist/index.js",
@@ -12,12 +12,12 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@zoetrope/cache": "workspace:*",
-    "@zoetrope/decoder": "workspace:*",
-    "@zoetrope/manifest": "workspace:*",
-    "@zoetrope/motion": "workspace:*",
-    "@zoetrope/renderer": "workspace:*",
-    "@zoetrope/streaming": "workspace:*"
+    "@zoetropejs/cache": "workspace:*",
+    "@zoetropejs/decoder": "workspace:*",
+    "@zoetropejs/manifest": "workspace:*",
+    "@zoetropejs/motion": "workspace:*",
+    "@zoetropejs/renderer": "workspace:*",
+    "@zoetropejs/streaming": "workspace:*"
   },
   "scripts": {
     "build": "tsc && node build.mjs"
