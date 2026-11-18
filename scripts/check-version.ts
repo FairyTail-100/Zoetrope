@@ -9,8 +9,8 @@ export function checkVersions(): { success: boolean; version: string; mismatches
   const expectedVersion = rootPkg.version;
   const mismatches: string[] = [];
 
-  if (rootPkg.name !== 'zoetrope-monorepo') {
-    mismatches.push(`root package.json name must be "zoetrope-monorepo", found "${rootPkg.name}"`);
+  if (rootPkg.name !== 'zoetropejs-monorepo') {
+    mismatches.push(`root package.json name must be "zoetropejs-monorepo", found "${rootPkg.name}"`);
   }
 
   const packagesDir = path.join(repoRoot, 'packages');

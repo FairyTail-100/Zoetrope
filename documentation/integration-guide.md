@@ -16,7 +16,7 @@ pnpm add file:./dist-release/zoetrope-core-0.1.0-rc.1.tgz
 pnpm add @zoetropejs/core
 ```
 
-> **Note on Tarballs**: The private monorepo root (`zoetrope-monorepo`) is `private: true` and is not packed. The single standalone runtime tarball is `zoetrope-core-0.1.0-rc.1.tgz` (which bundles all internal dependencies).
+> **Note on Tarballs**: The private monorepo root (`zoetropejs-monorepo`) is `private: true` and is not packed. The single standalone runtime tarball is `zoetrope-core-0.1.0-rc.1.tgz` (which bundles all internal dependencies).
 
 For React applications, also install `@zoetropejs/react`:
 ```bash

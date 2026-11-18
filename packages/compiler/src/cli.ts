@@ -337,8 +337,12 @@ async function run(): Promise<void> {
   ];
 
   // DISK GUARD: Estimate output size before extraction
+  let probe: Awaited<ReturnType<typeof probeMedia>> | null = null;
   try {
-    const probe = await probeMedia(path.resolve(inputPath));
+    probe = await probeMedia(path.resolve(inputPath));
+  } catch { /* failed probe skips the disk guard; compile() reports the real error */ }
+
+  if (probe) {
     const targetFps = fps ?? probe.fps ?? 30;
     const startSec = start ? parseFloat(start) : 0;
     const endSec = end ? parseFloat(end) : probe.duration;
@@ -359,7 +363,7 @@ async function run(): Promise<void> {
       const outParent = fs.existsSync(outDir) ? outDir : path.dirname(path.resolve(outDir));
       const s = fs.statfsSync(outParent);
       freeBytes = s.bsize * s.bavail;
-    } catch { /* statfsSync unavailable; fall back to Infinity */ }
+    } catch { /* statfsSync unavailable; skips only the free-space check and never aborts compile */ }
 
     const isExceeding500MB = totalEstBytes > 500 * 1024 * 1024;
     const isDiskTight = freeBytes < 2 * totalEstBytes;
@@ -375,7 +379,7 @@ async function run(): Promise<void> {
       console.warn(`   - Pass --yes to confirm and proceed with compilation.\n`);
       process.exit(1);
     }
-  } catch { /* best-effort disk guard; compile() handles real failures */ }
+  }
 
   try {
     const manifest = await compile({
