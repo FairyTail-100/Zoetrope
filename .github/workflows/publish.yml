@@ -1,0 +1,88 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run pnpm publish with --dry-run'
+        type: boolean
+        default: true
+        required: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm-publish
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify tag and package versions
+        run: |
+          node -e '
+            const fs = require("fs");
+            const readVer = (p) => JSON.parse(fs.readFileSync(p, "utf8")).version;
+            const core = readVer("packages/core/package.json");
+            const react = readVer("packages/react/package.json");
+            const compiler = readVer("packages/compiler/package.json");
+            const tag = process.env.GITHUB_REF_NAME || "";
+            const refType = process.env.GITHUB_REF_TYPE || "";
+            console.log(`ref_type=${refType} ref_name=${tag}`);
+            console.log(`versions: core=${core} react=${react} compiler=${compiler}`);
+            if (core !== react || core !== compiler) {
+              console.error("Package versions do not match across core, react, and compiler.");
+              process.exit(1);
+            }
+            if (refType === "tag" && tag !== `v${core}`) {
+              console.error(`Tag ${tag} does not match expected v${core}.`);
+              process.exit(1);
+            }
+          '
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Test packages
+        run: pnpm pack:all && pnpm test:packages
+
+      - name: Publish @zoetropejs/core
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm --filter @zoetropejs/core publish --provenance --access public --tag next --no-git-checks ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '--dry-run' || '' }}
+
+      - name: Publish @zoetropejs/react
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm --filter @zoetropejs/react publish --provenance --access public --tag next --no-git-checks ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '--dry-run' || '' }}
+
+      - name: Publish @zoetropejs/compiler
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm --filter @zoetropejs/compiler publish --provenance --access public --tag next --no-git-checks ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '--dry-run' || '' }}

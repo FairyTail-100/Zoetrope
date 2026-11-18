@@ -4,10 +4,8 @@ Runtime engine for ZoetropeJS: bidirectional scroll-driven HTML5 Canvas video pl
 
 ## Installation
 
-> Not yet published to npm. Build locally with `pnpm pack:all` and install the standalone tarball (which bundles all internal dependencies):
-
 ```bash
-pnpm add file:./dist-release/zoetrope-core-0.1.0-rc.1.tgz
+npm i @zoetropejs/core@next
 ```
 
 ## Minimal Usage
