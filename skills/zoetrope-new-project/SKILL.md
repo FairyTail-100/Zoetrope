@@ -1,6 +1,6 @@
 ---
 name: zoetrope-new-project
-description: Scaffolding a clean, standalone Vite + Zoetrope client project. Use when starting a new video-driven web experience.
+description: Scaffolding a clean, standalone Vite + ZoetropeJS client project. Use when starting a new video-driven web experience.
 ---
 
 # New Project Scaffolding
@@ -33,7 +33,7 @@ my-scroll-site/
 ├── vite.config.ts        # Vite config with CORS dev headers
 ├── index.html            # 300vh scroll container + 100vh sticky canvas viewport
 ├── src/
-│   └── main.ts           # Initializes Zoetrope with ?manifest= support
+│   └── main.ts           # Initializes ZoetropeJS with ?manifest= support
 ├── public/
 │   └── assets/demo/      # Minimal runnable demo manifest + placeholder frames
 └── README.md
@@ -53,6 +53,6 @@ Visit `http://localhost:5173` to test the scroll canvas.
 
 1. Transcode your video into the project assets folder:
    ```bash
-   pnpm zoetrope compile my-video.mp4 --out apps/my-scroll-site/public/assets/hero --fps 24
+   pnpm zoetropejs compile my-video.mp4 --out apps/my-scroll-site/public/assets/hero --fps 24
    ```
 2. Update `src/main.ts` or pass `?manifest=/assets/hero/manifest.json` in the browser URL.

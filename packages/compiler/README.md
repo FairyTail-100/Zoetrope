@@ -7,8 +7,8 @@ Asset compiler, manifest validator, and `zoetrope` CLI for converting video file
 > Not yet published to npm. Run directly from the workspace or install the packed tarball from `dist-release/`:
 
 ```bash
-pnpm zoetrope doctor
-pnpm zoetrope compile input.mp4 --out ./public/assets/hero --fps 24
+pnpm zoetropejs doctor
+pnpm zoetropejs compile input.mp4 --out ./public/assets/hero --fps 24
 ```
 
 ## Programmatic Usage

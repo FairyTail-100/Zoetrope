@@ -1,6 +1,6 @@
-# Zoetrope Agent Skills
+# ZoetropeJS Agent Skills
 
-This directory contains 7 specialized skills designed for AI agents and developers working with Zoetrope.
+This directory contains 7 specialized skills designed for AI agents and developers working with ZoetropeJS.
 
 ## Skill Directory Structure
 
@@ -19,7 +19,7 @@ Every skill follows the standard Agent Skills specification:
 | **Compose** | `zoetrope-compose` | Multi-track layering, iris masks, scroll windows, and DOM cue orchestration. |
 | **Deploy Cloudflare**| `zoetrope-deploy-cloudflare` | Production static hosting on Cloudflare Pages/Workers with immutable frame caching. |
 | **Troubleshoot** | `zoetrope-troubleshoot` | Root-cause diagnosis and fixes for real-world playback, compile, and network issues. |
-| **New Project** | `zoetrope-new-project` | Scaffolding a clean, standalone Vite + Zoetrope client project. |
+| **New Project** | `zoetrope-new-project` | Scaffolding a clean, standalone Vite + ZoetropeJS client project. |
 
 ## Installation & Distribution
 

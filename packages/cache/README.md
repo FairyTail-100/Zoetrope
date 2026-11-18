@@ -1,3 +1,3 @@
 # @zoetropejs/cache
 
-Internal package of Zoetrope.
+Internal package of ZoetropeJS.

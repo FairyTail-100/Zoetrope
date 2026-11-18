@@ -237,7 +237,7 @@ export function runDoctor(deps: DoctorDeps = {}): DoctorSummary {
 }
 
 export function printDoctorTable(summary: DoctorSummary): void {
-  console.log('\nZoetrope System Diagnostics:\n');
+  console.log('\nZoetropeJS System Diagnostics:\n');
 
   for (const c of summary.checks) {
     const statusText = c.warning ? '[WARN]' : c.passed ? '[PASS]' : '[FAIL]';

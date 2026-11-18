@@ -9,12 +9,12 @@ import { runDoctor, printDoctorTable } from './doctor.js';
 
 function printHelp(): void {
   console.log(`
-Zoetrope — Asset Compiler & Validator
+ZoetropeJS — Asset Compiler & Validator
 
 USAGE:
-  zoetrope compile <input-video> --out <output-dir> [options]
-  zoetrope validate <manifest-path> [--deep] [--json]
-  zoetrope doctor
+  zoetropejs  <input-video> --out <output-dir> [options]
+  zoetropejs  <manifest-path> [--deep] [--json]
+  zoetropejs 
 
 COMMANDS:
   compile <input>         Extracts and packages video into Zoetrope scroll variants
@@ -48,9 +48,9 @@ VALIDATE OPTIONS:
   --json                  Output validation results as structured JSON
 
 EXAMPLES:
-  zoetrope compile clip.mp4 --out ./public/assets/clip --fps 30 --checksum
-  zoetrope compile clip.mp4 --out ./dist --variant desktop:1920:1080:768 --variant mobile:640:360:0 --anchors 10
-  zoetrope validate ./public/assets/clip/manifest.json --deep
+  zoetropejs  clip.mp4 --out ./public/assets/clip --fps 30 --checksum
+  zoetropejs  clip.mp4 --out ./dist --variant desktop:1920:1080:768 --variant mobile:640:360:0 --anchors 10
+  zoetropejs  ./public/assets/clip/manifest.json --deep
 `);
 }
 
@@ -320,7 +320,7 @@ async function run(): Promise<void> {
     process.exit(1);
   }
 
-  console.log(`\n🎬 Zoetrope Compiler`);
+  console.log(`\n🎬 ZoetropeJS Compiler`);
   console.log(`Input:   ${inputPath}`);
   console.log(`Output:  ${outDir}`);
   console.log(`Packing: ${packing}`);

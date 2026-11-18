@@ -1,5 +1,5 @@
 # Technical Assessment & Architectural Specification
-## Zoetrope: Engineering a Framework-Agnostic Animation Pipeline
+## ZoetropeJS: Engineering a Framework-Agnostic Animation Pipeline
 
 ---
 
@@ -28,7 +28,7 @@ High-performance interactive web productions demonstrate advanced scroll-driven 
    - Read as 32-bit Little-Endian integer: `0x50424D41`.
    - Read as 32-bit Big-Endian integer: `0x414D4250`.
    - The discrepancy in the audit was caused by mixing endianness representations.
-   - *Engine Specification:* We defined **`CEPK` (Zoetrope packet v1)** with explicit Little-Endian encoding, header CRC32, and per-frame payload CRC32 checksums.
+   - *Engine Specification:* We defined **`CEPK` (ZoetropeJS packet v1)** with explicit Little-Endian encoding, header CRC32, and per-frame payload CRC32 checksums.
 
 2. **Latency & Performance Claims:**
    - Frame retrieval and decode performance depends on device hardware, display resolution, GPU capabilities, and network conditions.
@@ -53,7 +53,7 @@ custom-video-pipeline/
 │   ├── streaming/            # Priority queue, lookahead prefetch scheduler, CEPK unpacker
 │   ├── renderer/             # Canvas 2D engine, DPR compensation, cover/contain math
 │   ├── compiler/             # Node CLI & library: FFmpeg frame extractor, pack builder (Sharp: Planned)
-│   ├── core/                 # Zoetrope orchestrator & event bus
+│   ├── core/                 # ZoetropeJS orchestrator & event bus
 │   └── react/                # React hook (useZoetrope) and <ZoetropeCanvas />
 ├── examples/
 │   └── basic-scroll/         # Interactive showcase with telemetry HUD

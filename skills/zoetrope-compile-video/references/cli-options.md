@@ -1,10 +1,10 @@
-# Zoetrope Compiler CLI Options Reference
+# ZoetropeJS Compiler CLI Options Reference
 
-The compiler binary is available via `pnpm zoetrope` or `node packages/compiler/dist/cli.js`.
+The compiler binary is available via `pnpm zoetropejs` or `node packages/compiler/dist/cli.js`.
 
 Usage:
 ```bash
-pnpm zoetrope compile <input-video> --out <output-dir> [options]
+pnpm zoetropejs compile <input-video> --out <output-dir> [options]
 ```
 
 | Option | Type / Default | Description |

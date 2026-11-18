@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest a feature or improvement for Zoetrope
+about: Suggest a feature or improvement for ZoetropeJS
 title: "[Feature]: "
 labels: enhancement
 ---

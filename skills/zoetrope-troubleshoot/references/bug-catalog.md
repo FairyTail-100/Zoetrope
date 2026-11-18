@@ -1,4 +1,4 @@
-# Zoetrope Troubleshooting & Diagnostic Catalog
+# ZoetropeJS Troubleshooting & Diagnostic Catalog
 
 Detailed incident catalog with file locations, root causes, and regression tests.
 

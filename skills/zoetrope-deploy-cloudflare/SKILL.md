@@ -1,6 +1,6 @@
 ---
 name: zoetrope-deploy-cloudflare
-description: Deploying Zoetrope assets to Cloudflare Pages or Workers with immutable frame caching. Use when configuring CDN caching headers, routing rules, or deployment checks.
+description: Deploying ZoetropeJS assets to Cloudflare Pages or Workers with immutable frame caching. Use when configuring CDN caching headers, routing rules, or deployment checks.
 ---
 
 # Cloudflare Pages / Workers Deployment

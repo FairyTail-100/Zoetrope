@@ -5,7 +5,7 @@ description: Embedding the scroll player in web frameworks (Vanilla JS, React, N
 
 # Engine Framework Integration
 
-Embed Zoetrope in any web runtime using its HTML5 canvas renderer.
+Embed ZoetropeJS in any web runtime using its HTML5 canvas renderer.
 
 ## Package Installation
 
@@ -21,7 +21,7 @@ pnpm add @zoetropejs/core
 ## 1. Vanilla HTML / Canvas
 
 ```typescript
-import { Zoetrope } from '@zoetropejs/core';
+import { ZoetropeJS } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#viewport')!;
 

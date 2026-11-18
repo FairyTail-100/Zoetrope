@@ -1,4 +1,4 @@
-# Contributing to Zoetrope
+# Contributing to ZoetropeJS
 
 Issues and pull requests are welcome at https://github.com/FairyTail-100/Zoetrope.
 

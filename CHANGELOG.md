@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0-rc.1] - 2026-11-17
 
 ### Added
-- `@zoetropejs/core`: Scroll-driven HTML5 Canvas video playback (`Zoetrope`), multi-layer timeline and mask composition (`ZoetropeComposition`), two-tier memory cache (`DirectionalLRUCache` + `BlobCache`), request-horizon prefetching, and `prefers-reduced-motion` support.
+- `@zoetropejs/core`: Scroll-driven HTML5 Canvas video playback (`ZoetropeJS`), multi-layer timeline and mask composition (`ZoetropeComposition`), two-tier memory cache (`DirectionalLRUCache` + `BlobCache`), request-horizon prefetching, and `prefers-reduced-motion` support.
 - `@zoetropejs/compiler`: `zoetrope` CLI (`compile`, `validate`, `doctor`, `init`) for multi-variant WebP/AVIF/JPEG frame extraction, color-matrix fidelity, anchor sets, and optional CEPK binary packing.
 - `@zoetropejs/react`: `useZoetrope`, `ZoetropeCanvas`, and SSR-safe `NextZoetropePlayer`.
-- `schema/v1.json`: JSON Schema (Draft 2020-12) for Zoetrope v1.0.0 manifests.
+- `schema/v1.json`: JSON Schema (Draft 2020-12) for ZoetropeJS v1.0.0 manifests.
 - `skills/zoetrope-*`: 7 agent skills with automated validation (`pnpm test:skills`).

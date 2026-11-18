@@ -1,6 +1,6 @@
-# Zoetrope Integration Guide
+# ZoetropeJS Integration Guide
 
-This guide covers production integration patterns for adding Zoetrope to existing websites across Vanilla JS, React, Next.js, and Astro.
+This guide covers production integration patterns for adding ZoetropeJS to existing websites across Vanilla JS, React, Next.js, and Astro.
 
 ---
 
@@ -51,7 +51,7 @@ The engine renders directly to an HTML5 `<canvas>`. To ensure smooth playback wi
 By default, `ScrollDriver` tracks `window.scrollY`. For sections embedded mid-page, pass a `triggerElement` or custom container:
 
 ```typescript
-import { Zoetrope } from '@zoetropejs/core';
+import { ZoetropeJS } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#hero-viewport')!;
 const section = document.querySelector<HTMLElement>('.scrolly-section')!;
@@ -135,7 +135,7 @@ window.addEventListener('beforeunload', () => composition.destroy());
 To preserve mobile data and avoid prefetching before the user reaches the section, gate engine initialization behind an `IntersectionObserver`:
 
 ```typescript
-let engineInstance: Zoetrope | null = null;
+let engineInstance: ZoetropeJS | null = null;
 
 const observer = new IntersectionObserver((entries) => {
   for (const entry of entries) {

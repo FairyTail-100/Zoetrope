@@ -24,7 +24,7 @@ custom-video-pipeline/
 ├── packages/                   # Core modular library packages
 │   ├── cache/                  # DirectionalLRUCache & BlobCache
 │   ├── compiler/               # Video probe, extraction, LUT & packaging pipeline
-│   ├── core/                   # Zoetrope orchestrator
+│   ├── core/                   # ZoetropeJS orchestrator
 │   ├── decoder/                # Decoders (WebWorker, ImageDecoder, ImageBitmap)
 │   ├── manifest/               # Schema validation & variant negotiation
 │   ├── motion/                 # Physics smoother & motion LUT mapping
