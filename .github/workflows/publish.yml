@@ -60,6 +60,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Verify FFmpeg and encoders
+        run: |
+          ffmpeg -version | head -1
+          ffmpeg -hide_banner -encoders | grep -E "libwebp|libaom-av1|mjpeg"
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium --with-deps
+
       - name: Build
         run: pnpm build
 
