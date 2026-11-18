@@ -22,7 +22,18 @@ flowchart LR
 
 ## Install
 
-The `@zoetropejs/core`, `@zoetropejs/compiler`, and `@zoetropejs/react` packages are **not yet published to npm**. Build the release tarballs inside a clone of this repository, then install them into your project by absolute path:
+`0.1.0-rc.1` is a release candidate published under the `next` dist-tag:
+
+```bash
+npm i @zoetropejs/core@next
+npm i -D @zoetropejs/compiler@next
+# Optional React / Next.js adapter (requires @zoetropejs/core and react >=18.0.0)
+npm i @zoetropejs/react@next
+```
+
+### Install from source
+
+For contributors building release tarballs from a clone of this repository:
 
 ```bash
 # 1. Inside a clone of the ZoetropeJS repository:
@@ -38,9 +49,10 @@ pnpm add "$REPO/dist-release/zoetropejs-react-0.1.0-rc.1.tgz"
 
 ## Quickstart
 
-`npx zoetropejs` works after the `@zoetropejs/compiler` tarball is installed in your project. Compile a video into `manifest.json` and frame sequences:
+`npx zoetropejs compile ...` works once `@zoetropejs/compiler` is installed in your project. Check system prerequisites and compile a video into `manifest.json` and frame sequences:
 
 ```bash
+npx @zoetropejs/compiler doctor
 npx zoetropejs compile input.mp4 --out ./public/assets/clip --fps 24
 ```
 
@@ -157,7 +169,6 @@ Checks Node.js, pnpm, FFmpeg version and `bt601` scale filter, encoders (`libweb
 - No automated e2e coverage on Firefox or WebKit/Safari.
 - No benchmark comparing ZoetropeJS against a plain image array or an all-keyframe `<video>`.
 - No built-in poster fallback outside `prefers-reduced-motion` frame 0.
-- Packages are not yet published to npm.
 - The standalone `@zoetropejs/*` snippets above were typechecked (`tsc --noEmit`) against a compiled manifest, not executed in a browser.
 
 ## Examples
@@ -184,3 +195,5 @@ pnpm test:e2e
 ## License
 
 MIT — see [LICENSE](LICENSE) and [https://github.com/FairyTail-100/Zoetrope](https://github.com/FairyTail-100/Zoetrope).
+
+Demo footage: original footage by the author.
