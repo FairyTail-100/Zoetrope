@@ -6,7 +6,10 @@ Not yet benchmarked or tested on real mobile devices; see Known Gaps.
 
 ZoetropeJS compiles a source video into responsive image frame sequences and renders them onto an HTML5 `<canvas>` driven by scroll progress. It does not decode video streams in the browser at runtime, has no audio playback, and renders frame 0 as a static poster when `prefers-reduced-motion: reduce` is active.
 
-<!-- TODO: Add demo clip (GIF/WebM) -->
+![ZoetropeJS scroll-scrubbed demo](docs/assets/demo.gif)
+
+*Scroll-scrubbed playback of original footage by the author, compiled with zoetropejs. Recorded in Chromium on one machine; not a performance measurement.*
+
 <!-- TODO: Add live demo link -->
 
 ```mermaid
