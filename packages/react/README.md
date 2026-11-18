@@ -6,10 +6,8 @@ React hooks and components (`useZoetrope`, `ZoetropeCanvas`, and SSR-safe `NextZ
 
 ## Installation
 
-> Not yet published to npm. Build locally with `pnpm pack:all` and install from `dist-release/`:
-
 ```bash
-pnpm add file:./dist-release/zoetrope-core-0.1.0-rc.1.tgz file:./dist-release/zoetrope-react-0.1.0-rc.1.tgz
+npm i @zoetropejs/react@next
 ```
 
 ## Minimal Usage
