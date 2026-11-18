@@ -35,13 +35,13 @@ export function scaffoldProject(options: ScaffoldOptions): string {
 
     // Ensure release tarballs exist
     const requiredTarballs = [
-      `zoetrope-core-${version}.tgz`,
-      `zoetrope-manifest-${version}.tgz`,
-      `zoetrope-cache-${version}.tgz`,
-      `zoetrope-motion-${version}.tgz`,
-      `zoetrope-decoder-${version}.tgz`,
-      `zoetrope-streaming-${version}.tgz`,
-      `zoetrope-renderer-${version}.tgz`
+      `zoetropejs-core-${version}.tgz`,
+      `zoetropejs-manifest-${version}.tgz`,
+      `zoetropejs-cache-${version}.tgz`,
+      `zoetropejs-motion-${version}.tgz`,
+      `zoetropejs-decoder-${version}.tgz`,
+      `zoetropejs-streaming-${version}.tgz`,
+      `zoetropejs-renderer-${version}.tgz`
     ];
 
     const hasAllTarballs = requiredTarballs.every(t => fs.existsSync(path.join(distReleaseDir, t)));
@@ -64,7 +64,7 @@ export function scaffoldProject(options: ScaffoldOptions): string {
     }
 
     dependencies = {
-      '@zoetropejs/core': `file:./vendor/zoetrope-core-${version}.tgz`
+      '@zoetropejs/core': `file:./vendor/zoetropejs-core-${version}.tgz`
     };
   }
 
