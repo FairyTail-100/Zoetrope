@@ -1,5 +1,5 @@
 {
-  "name": "@zoetrope/compiler",
+  "name": "@zoetropejs/compiler",
   "version": "0.1.0-rc.1",
   "type": "module",
   "bin": {
@@ -9,8 +9,8 @@
   "types": "./dist/index.d.ts",
   "dependencies": {},
   "devDependencies": {
-    "@zoetrope/manifest": "workspace:*",
-    "@zoetrope/streaming": "workspace:*"
+    "@zoetropejs/manifest": "workspace:*",
+    "@zoetropejs/streaming": "workspace:*"
   },
   "optionalDependencies": {
     "sharp": "^0.35.5"

@@ -9,7 +9,7 @@
     "build:examples": "tsx scripts/ensure-showcase-assets.ts && pnpm -r --filter=\"./examples/*\" run build",
     "typecheck": "tsc --build",
     "lint": "eslint packages tests",
-    "test": "pnpm --filter @zoetrope/manifest build && vitest run",
+    "test": "pnpm --filter @zoetropejs/manifest build && vitest run",
     "test:watch": "vitest",
     "test:skills": "vitest run tests/skills-validator.test.ts",
     "test:scaffold": "tsx scripts/test-scaffold.ts",

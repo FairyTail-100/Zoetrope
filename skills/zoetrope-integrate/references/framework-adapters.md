@@ -14,7 +14,7 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 
 const PlayerInternal = dynamic(
-  () => import('@zoetrope/react').then((mod) => mod.NextZoetropePlayer),
+  () => import('@zoetropejs/react').then((mod) => mod.NextZoetropePlayer),
   { ssr: false }
 );
 
@@ -54,7 +54,7 @@ const { manifestUrl } = Astro.props;
 </div>
 
 <script>
-  import { Zoetrope } from '@zoetrope/core';
+  import { Zoetrope } from '@zoetropejs/core';
 
   const canvas = document.getElementById('zoetrope-canvas') as HTMLCanvasElement;
   if (canvas) {

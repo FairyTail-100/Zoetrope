@@ -1,11 +1,11 @@
-# Zoetrope Asset Compiler & Validator (`@zoetrope/compiler`)
+# Zoetrope Asset Compiler & Validator (`@zoetropejs/compiler`)
 ## Production-Grade Video Extraction, Format Encoding, and Manifest Compiler
 
 ---
 
 ## 1. Overview & Architecture
 
-`@zoetrope/compiler` provides an industrial-grade asset compilation pipeline that converts arbitrary input videos into high-performance, deterministic scroll-driven sequence packages. It features:
+`@zoetropejs/compiler` provides an industrial-grade asset compilation pipeline that converts arbitrary input videos into high-performance, deterministic scroll-driven sequence packages. It features:
 
 - **Single-Pass Multi-Variant Extraction:** Emits desktop, mobile, and tablet resolution variants simultaneously via FFmpeg `-filter_complex` split graphs, decoding video frames exactly once.
 - **Multi-Format Support:** First-class compilation to WebP (default), AVIF (via Sharp), and JPEG.
@@ -68,7 +68,7 @@ If `--variant` is omitted, the compiler defaults to a responsive dual-variant la
 Import `compile` or `validateManifestFile` directly into Node.js applications:
 
 ```typescript
-import { compile, validateManifestFile } from '@zoetrope/compiler';
+import { compile, validateManifestFile } from '@zoetropejs/compiler';
 
 // Compile sequence
 const manifest = await compile({

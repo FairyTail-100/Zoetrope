@@ -3,7 +3,7 @@ import {
   CEPK_RECORD_SIZE,
   CEPK_VERSION,
   CEPKRecord,
-} from '@zoetrope/manifest';
+} from '@zoetropejs/manifest';
 
 export interface UnpackedPack {
   version: number;

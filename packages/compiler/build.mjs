@@ -27,7 +27,7 @@ await build({
     },
   },
   ssr: {
-    noExternal: ['@zoetrope/manifest', '@zoetrope/streaming'],
+    noExternal: ['@zoetropejs/manifest', '@zoetropejs/streaming'],
   },
 });
 
@@ -41,8 +41,8 @@ if (!cliCode.startsWith('#!/usr/bin/env node')) {
 const resolveInternal = {
   name: 'resolve-internal-zoetrope',
   resolveId(source) {
-    if (source.startsWith('@zoetrope/')) {
-      const pkg = source.slice('@zoetrope/'.length);
+    if (source.startsWith('@zoetropejs/')) {
+      const pkg = source.slice('@zoetropejs/'.length);
       return path.resolve(`../${pkg}/dist/index.d.ts`);
     }
     return null;

@@ -1,4 +1,4 @@
-import { ZoetropeComposition, CompositionLayerConfig, Cue } from '@zoetrope/core';
+import { ZoetropeComposition, CompositionLayerConfig, Cue } from '@zoetropejs/core';
 
 async function init() {
   const canvas = document.querySelector<HTMLCanvasElement>('#composition-canvas')!;

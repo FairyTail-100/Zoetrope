@@ -6,19 +6,19 @@ This guide covers production integration patterns for adding Zoetrope to existin
 
 ## 1. Quick Installation
 
-Install `@zoetrope/core` in your project:
+Install `@zoetropejs/core` in your project:
 
 ```bash
 # Standalone self-contained core runtime (proven outside repo):
 pnpm add file:./dist-release/zoetrope-core-0.1.0-rc.1.tgz
 
 # Or once published on npm:
-pnpm add @zoetrope/core
+pnpm add @zoetropejs/core
 ```
 
 > **Note on Tarballs**: The private monorepo root (`zoetrope-monorepo`) is `private: true` and is not packed. The single standalone runtime tarball is `zoetrope-core-0.1.0-rc.1.tgz` (which bundles all internal dependencies).
 
-For React applications, also install `@zoetrope/react`:
+For React applications, also install `@zoetropejs/react`:
 ```bash
 pnpm add file:./dist-release/zoetrope-react-0.1.0-rc.1.tgz
 ```
@@ -51,7 +51,7 @@ The engine renders directly to an HTML5 `<canvas>`. To ensure smooth playback wi
 By default, `ScrollDriver` tracks `window.scrollY`. For sections embedded mid-page, pass a `triggerElement` or custom container:
 
 ```typescript
-import { Zoetrope } from '@zoetrope/core';
+import { Zoetrope } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#hero-viewport')!;
 const section = document.querySelector<HTMLElement>('.scrolly-section')!;
@@ -84,7 +84,7 @@ await engine.init();
 When orchestrating multiple sequences (e.g. background environment + foreground product mask), use `ZoetropeComposition`:
 
 ```typescript
-import { ZoetropeComposition, CompositionLayerConfig } from '@zoetrope/core';
+import { ZoetropeComposition, CompositionLayerConfig } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#composition-viewport')!;
 

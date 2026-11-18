@@ -5,7 +5,7 @@ description: Scaffolding a clean, standalone Vite + Zoetrope client project. Use
 
 # New Project Scaffolding
 
-Generate a clean, standalone client application wired to `@zoetrope/core` with a sticky scroll canvas layout, Vite bundler, and placeholder manifest.
+Generate a clean, standalone client application wired to `@zoetropejs/core` with a sticky scroll canvas layout, Vite bundler, and placeholder manifest.
 
 ## Scaffolding Command
 

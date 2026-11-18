@@ -10,8 +10,8 @@ import {
   validateManifest,
   VariantFormatSource,
   VariantStats,
-} from '@zoetrope/manifest';
-import { packCEPK } from '@zoetrope/streaming';
+} from '@zoetropejs/manifest';
+import { packCEPK } from '@zoetropejs/streaming';
 import { probeMedia } from './probe.js';
 import { computeMotionLut } from './motion-lut.js';
 import { generateAnchorSet } from './anchors.js';

@@ -1,3 +1,3 @@
-# @zoetrope/decoder
+# @zoetropejs/decoder
 
 Internal package of Zoetrope.

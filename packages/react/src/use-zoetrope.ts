@@ -3,7 +3,7 @@ import {
   Zoetrope,
   ZoetropeOptions,
   EngineTelemetry,
-} from '@zoetrope/core';
+} from '@zoetropejs/core';
 
 export interface UseZoetropeReturn {
   engine: Zoetrope | null;

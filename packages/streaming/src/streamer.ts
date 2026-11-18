@@ -1,5 +1,5 @@
-import { ResolutionVariant, ChunkRecord } from '@zoetrope/manifest';
-import { BlobCache } from '@zoetrope/cache';
+import { ResolutionVariant, ChunkRecord } from '@zoetropejs/manifest';
+import { BlobCache } from '@zoetropejs/cache';
 import { PriorityQueue } from './priority-queue.js';
 import { unpackCEPK } from './binary-pack.js';
 import { StreamingOptions, FrameFetchRequest, StreamerStats } from './types.js';

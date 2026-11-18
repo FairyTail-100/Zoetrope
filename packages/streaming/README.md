@@ -1,3 +1,3 @@
-# @zoetrope/streaming
+# @zoetropejs/streaming
 
 Internal package of Zoetrope.

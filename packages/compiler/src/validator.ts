@@ -6,7 +6,7 @@ import {
   validateManifest,
   CEPK_HEADER_SIZE,
   CEPK_MAGIC,
-} from '@zoetrope/manifest';
+} from '@zoetropejs/manifest';
 import { readImageDimensions } from './image-header.js';
 
 export type ValidationErrorCode =

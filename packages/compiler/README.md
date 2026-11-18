@@ -1,4 +1,4 @@
-# @zoetrope/compiler
+# @zoetropejs/compiler
 
 Asset compiler, manifest validator, and `zoetrope` CLI for converting video files into multi-resolution WebP/AVIF/JPEG frame sequences.
 
@@ -14,7 +14,7 @@ pnpm zoetrope compile input.mp4 --out ./public/assets/hero --fps 24
 ## Programmatic Usage
 
 ```typescript
-import { compile, validateManifestFile } from '@zoetrope/compiler';
+import { compile, validateManifestFile } from '@zoetropejs/compiler';
 
 const manifest = await compile({
   input: './clip.mp4',

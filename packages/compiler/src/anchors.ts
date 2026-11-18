@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { spawn } from 'node:child_process';
-import { AnchorSet, ImageMimeType } from '@zoetrope/manifest';
+import { AnchorSet, ImageMimeType } from '@zoetropejs/manifest';
 import { findFFmpegBinary } from './ffmpeg.js';
 import { jpegQualityToQscale, resolveEncoderQuality } from './compiler.js';
 

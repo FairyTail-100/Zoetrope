@@ -1,4 +1,4 @@
-import { BlobCacheStats } from '@zoetrope/cache';
+import { BlobCacheStats } from '@zoetropejs/cache';
 
 export interface FrameFetchRequest {
   frameId: number;

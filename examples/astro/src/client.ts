@@ -1,4 +1,4 @@
-import { Zoetrope } from '@zoetrope/core';
+import { Zoetrope } from '@zoetropejs/core';
 
 export function mountZoetropeIsland(canvasId: string, manifestUrl: string) {
   const canvas = document.getElementById(canvasId) as HTMLCanvasElement;

@@ -37,9 +37,9 @@ export async function runScaffoldSmokeTest(): Promise<void> {
       throw new Error('[test:scaffold] FAILED: package.json contains "workspace:"');
     }
     const pkg = JSON.parse(pkgContent);
-    if (!pkg.dependencies?.['@zoetrope/core']?.startsWith('file:./vendor/')) {
+    if (!pkg.dependencies?.['@zoetropejs/core']?.startsWith('file:./vendor/')) {
       throw new Error(
-        `[test:scaffold] FAILED: expected file:./vendor/ dependency, got ${pkg.dependencies?.['@zoetrope/core']}`
+        `[test:scaffold] FAILED: expected file:./vendor/ dependency, got ${pkg.dependencies?.['@zoetropejs/core']}`
       );
     }
     if (pkg.pnpm !== undefined) {

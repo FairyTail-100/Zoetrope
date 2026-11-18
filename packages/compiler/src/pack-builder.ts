@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { packCEPK } from '@zoetrope/streaming';
-import { ChunkRecord, FrameRecord } from '@zoetrope/manifest';
+import { packCEPK } from '@zoetropejs/streaming';
+import { ChunkRecord, FrameRecord } from '@zoetropejs/manifest';
 
 export interface PackOptions {
   frameFiles: string[];

@@ -1,13 +1,13 @@
 {
-  "name": "@zoetrope/streaming",
+  "name": "@zoetropejs/streaming",
   "version": "0.1.0-rc.1",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "@zoetrope/manifest": "workspace:*",
-    "@zoetrope/cache": "workspace:*"
+    "@zoetropejs/manifest": "workspace:*",
+    "@zoetropejs/cache": "workspace:*"
   },
   "scripts": {
     "build": "tsc"

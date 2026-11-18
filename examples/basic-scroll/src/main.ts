@@ -1,4 +1,4 @@
-import { Zoetrope, EngineTelemetry } from '@zoetrope/core';
+import { Zoetrope, EngineTelemetry } from '@zoetropejs/core';
 
 async function main() {
   const canvas = document.querySelector<HTMLCanvasElement>('#zoetrope-canvas')!;
