@@ -54,7 +54,7 @@ const { manifestUrl } = Astro.props;
 </div>
 
 <script>
-  import { Zoetrope } from '@zoetropejs/core';
+  import { ZoetropeJS } from '@zoetropejs/core';
 
   const canvas = document.getElementById('zoetrope-canvas') as HTMLCanvasElement;
   if (canvas) {

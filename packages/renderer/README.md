@@ -1,3 +1,3 @@
 # @zoetropejs/renderer
 
-Internal package of Zoetrope.
+Internal package of ZoetropeJS.

@@ -171,10 +171,10 @@ describe('Part 2 & 3: Agent Skills Specification & Verification', () => {
         expect(content, `${rel} contains forbidden stale string "${bad}"`).not.toContain(bad);
       }
 
-      // (a) Extract flags from `zoetrope compile` usage and cli-options.md table
+      // (a) Extract flags from `zoetropejs ` usage and cli-options.md table
       const compileLines = content
         .split('\n')
-        .filter((line) => line.includes('zoetrope compile') || (rel.endsWith('cli-options.md') && line.startsWith('| `--')));
+        .filter((line) => line.includes('zoetropejs ') || (rel.endsWith('cli-options.md') && line.startsWith('| `--')));
       for (const line of compileLines) {
         const lineFlags = line.match(/--[a-z][a-z0-9-]*/g) ?? [];
         for (const f of lineFlags) {

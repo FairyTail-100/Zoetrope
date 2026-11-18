@@ -5,18 +5,18 @@ description: Compiling source videos into frame sequences, variants, and manifes
 
 # Video Compilation Pipeline
 
-The Zoetrope Compiler converts video files into deterministic, responsive image sequences with a unified `manifest.json`.
+The ZoetropeJS Compiler converts video files into deterministic, responsive image sequences with a unified `manifest.json`.
 
 ## Quick Start Command
 
 From the repository root:
 ```bash
-pnpm zoetrope compile video.mp4 --out public/assets/hero --fps 24
+pnpm zoetropejs compile video.mp4 --out public/assets/hero --fps 24
 ```
 
 To compile a slice of a video:
 ```bash
-pnpm zoetrope compile raw.mp4 --out public/assets/hero --start 2.0 --end 10.0 --fps 24
+pnpm zoetropejs compile raw.mp4 --out public/assets/hero --start 2.0 --end 10.0 --fps 24
 ```
 
 ## Compilation Flags & Defaults

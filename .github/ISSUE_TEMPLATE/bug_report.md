@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a bug in Zoetrope
+about: Report a bug in ZoetropeJS
 title: "[Bug]: "
 labels: bug
 ---

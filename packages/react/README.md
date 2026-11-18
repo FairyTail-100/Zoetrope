@@ -1,6 +1,6 @@
 # @zoetropejs/react
 
-React hooks and components (`useZoetrope`, `ZoetropeCanvas`, and SSR-safe `NextZoetropePlayer`) for Zoetrope.
+React hooks and components (`useZoetrope`, `ZoetropeCanvas`, and SSR-safe `NextZoetropePlayer`) for ZoetropeJS.
 
 > Note: Astro is provided as a standalone example (`examples/astro`), not a published adapter package.
 

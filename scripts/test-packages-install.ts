@@ -173,9 +173,9 @@ export function check(canvas: HTMLCanvasElement) {
       JSON.stringify({ name: 'test-compiler-alone', version: '1.0.0', type: 'module' }, null, 2)
     );
     runCmd(`pnpm add "${compilerTarball}" --ignore-workspace`, compilerDir);
-    runCmd('npx zoetrope --help', compilerDir);
-    const docRes = runCmd('npx zoetrope doctor', compilerDir, true);
-    console.log(`[test:packages] (b) zoetrope doctor exited with code ${docRes.status}`);
+    runCmd('npx zoetropejs --help', compilerDir);
+    const docRes = runCmd('npx zoetropejs doctor', compilerDir, true);
+    console.log(`[test:packages] (b) zoetropejs  exited with code ${docRes.status}`);
     console.log('[test:packages] (b) @zoetropejs/compiler standalone CLI PASSED');
   } finally {
     fs.rmSync(compilerDir, { recursive: true, force: true });

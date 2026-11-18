@@ -1,4 +1,4 @@
-# Zoetrope Feature Status Matrix
+# ZoetropeJS Feature Status Matrix
 
 This matrix provides the authoritative status of all features and subsystems. A feature is marked **`stable`** only when automated real-browser or headless integration tests guard it.
 

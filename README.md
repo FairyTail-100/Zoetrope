@@ -1,6 +1,6 @@
-# Zoetrope
+# ZoetropeJS
 
-Zoetrope delivers bidirectional video playback driven entirely by user scroll interactions. By decoupling playback from native `<video>` decoders, it pre-decodes multi-resolution WebP frame sequences into a two-tier memory cache (decoded bitmaps + raw blobs) rendered directly to HTML5 Canvas. It is engineered specifically for interactive landing pages, product reveals, and scrollytelling narratives.
+ZoetropeJS delivers bidirectional video playback driven entirely by user scroll interactions. By decoupling playback from native `<video>` decoders, it pre-decodes multi-resolution WebP frame sequences into a two-tier memory cache (decoded bitmaps + raw blobs) rendered directly to HTML5 Canvas. It is engineered specifically for interactive landing pages, product reveals, and scrollytelling narratives.
 
 **10-Second Demo**: Compile any video and preview it live on a sticky viewport by running `pnpm demo:video <video.mp4>`.
 
@@ -20,14 +20,14 @@ The exact sequence tested outside this monorepo by `pnpm test:scaffold`:
 
 ```bash
 # 1. Check prerequisites (Node >= 20, pnpm, FFmpeg >= 6.0, ffprobe, disk space)
-pnpm zoetrope doctor
+pnpm zoetropejs doctor
 
 # 2. Scaffold a clean standalone project outside this repository
 pnpm tsx scripts/new-project.ts ../my-app "Hero Reveal"
 
 # 3. Extract and compile video footage into the app's public assets
 # Payload controls: --quality 80 (default), --desktop-width 1920 (default), --mobile-width 640 (default). Lower quality, fps or width reduces file size; effect on visual quality is (unverified) until checked.
-pnpm zoetrope compile input.mp4 --out ../my-app/public/assets/hero --fps 24
+pnpm zoetropejs compile input.mp4 --out ../my-app/public/assets/hero --fps 24
 
 # 4. Install dependencies using isolated lockfile
 cd ../my-app && pnpm install --allow-build=esbuild
@@ -43,10 +43,10 @@ pnpm dlx wrangler pages deploy dist/ --project-name hero-reveal
 
 ```mermaid
 flowchart LR
-  V["Source Video (.mp4/.mov)"] --> C["Zoetrope Compiler"]
+  V["Source Video (.mp4/.mov)"] --> C["ZoetropeJS Compiler"]
   C --> M["manifest.json + Frames"]
   M --> CDN["Static Host / Edge CDN"]
-  CDN --> E["Zoetrope Core & Two-Tier Cache"]
+  CDN --> E["ZoetropeJS Core & Two-Tier Cache"]
   E --> CV["HTML5 Canvas Viewport"]
 ```
 
@@ -61,7 +61,7 @@ flowchart LR
   <canvas id="viewport" style="position: sticky; top: 0; width: 100vw; height: 100vh;"></canvas>
 </div>
 <script type="module">
-  import { Zoetrope } from './dist-release/zoetrope.min.js';
+  import { ZoetropeJS } from './dist-release/zoetrope.min.js';
   const engine = new Zoetrope({
     manifest: '/assets/hero/manifest.json',
     canvas: document.getElementById('viewport'),
@@ -75,7 +75,7 @@ flowchart LR
 ### Path B: Vite / Vanilla TypeScript
 
 ```typescript
-import { Zoetrope } from '@zoetropejs/core';
+import { ZoetropeJS } from '@zoetropejs/core';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#viewport')!;
 const engine = new Zoetrope({

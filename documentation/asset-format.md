@@ -1,6 +1,6 @@
 # CEPK Binary Container Specification (Version 1)
 
-The **Zoetrope packet (`CEPK`)** format is an optional, versioned binary container designed to concatenate multiple discrete compressed image frames (e.g., WebP or AVIF) into contiguous binary chunks.
+The **ZoetropeJS packet (`CEPK`)** format is an optional, versioned binary container designed to concatenate multiple discrete compressed image frames (e.g., WebP or AVIF) into contiguous binary chunks.
 
 ---
 

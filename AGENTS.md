@@ -1,6 +1,6 @@
-# Zoetrope Agent Directives
+# ZoetropeJS Agent Directives
 
-Welcome, AI Agent. This repository contains **Zoetrope**, a canvas video-scrubbing system designed for bidirectional frame playback driven by user scroll interactions.
+Welcome, AI Agent. This repository contains **ZoetropeJS**, a canvas video-scrubbing system designed for bidirectional frame playback driven by user scroll interactions.
 
 ## 5-Step Agent Execution Workflow
 
@@ -8,7 +8,7 @@ Follow these steps in strict chronological order when assisting a user:
 
 ```mermaid
 flowchart TD
-  S1["1. Check Prerequisites<br><code>pnpm zoetrope doctor</code>"] --> S2["2. Compile with Preflight<br><code>pnpm tsx skills/zoetrope-compile-video/scripts/preflight.ts</code>"]
+  S1["1. Check Prerequisites<br><code>pnpm zoetropejs doctor</code>"] --> S2["2. Compile with Preflight<br><code>pnpm tsx skills/zoetrope-compile-video/scripts/preflight.ts</code>"]
   S2 --> DEC{"3. Choose Integration Path"}
   DEC -->|"New standalone project"| S3A["Scaffold App<br><code>pnpm tsx scripts/new-project.ts</code>"]
   DEC -->|"Existing site (Vite/Vanilla)"| S3B["Install Core & Canvas<br><code>skills/zoetrope-integrate</code>"]
@@ -21,11 +21,11 @@ flowchart TD
   S4 --> S5["5. Deploy to Cloudflare<br><code>skills/zoetrope-deploy-cloudflare</code>"]
 ```
 
-1. **Check Prerequisites**: Run `pnpm zoetrope doctor` to ensure Node (>=20), pnpm, FFmpeg (>=6.0), ffprobe, and disk space are valid.
+1. **Check Prerequisites**: Run `pnpm zoetropejs doctor` to ensure Node (>=20), pnpm, FFmpeg (>=6.0), ffprobe, and disk space are valid.
 2. **Compile Video**: Run preflight checks before extracting frames:
    ```bash
    pnpm tsx skills/zoetrope-compile-video/scripts/preflight.ts input.mp4 output-dir/
-   pnpm zoetrope compile input.mp4 --out output-dir/ --fps 24
+   pnpm zoetropejs compile input.mp4 --out output-dir/ --fps 24
    ```
 3. **Scaffold or Integrate**:
    - *New project*: `pnpm tsx scripts/new-project.ts ./apps/my-site "Project Title"`

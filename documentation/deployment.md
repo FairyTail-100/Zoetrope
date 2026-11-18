@@ -1,12 +1,12 @@
 # Production Deployment & Caching Guide
 
-This document describes the recommended CDN caching headers, edge configurations, and cache-busting strategies for Zoetrope animations.
+This document describes the recommended CDN caching headers, edge configurations, and cache-busting strategies for ZoetropeJS animations.
 
 ---
 
 ## 1. Caching Strategy Overview
 
-Zoetrope uses content-hashed URLs and manifest versioning (`?v=<buildhash>`). Frame assets are completely immutable for any given build hash.
+ZoetropeJS uses content-hashed URLs and manifest versioning (`?v=<buildhash>`). Frame assets are completely immutable for any given build hash.
 
 | Asset Type | Path / Pattern | `Cache-Control` Header | Rationale |
 | :--- | :--- | :--- | :--- |

@@ -233,7 +233,7 @@ describe('Phase 2 (F6): Atomic & Cache-Skipping Builds, Determinism, Process Cle
     );
     const abortCode = await new Promise<number | null>((resolve) => {
       proc.stdout.on('data', (d) => {
-        if (d.toString().includes('Zoetrope Compiler')) {
+        if (d.toString().includes('ZoetropeJS Compiler')) {
           proc.kill('SIGTERM');
         }
       });

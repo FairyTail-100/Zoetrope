@@ -1,19 +1,19 @@
 ---
 name: zoetrope-engine
-description: Root router and architectural index for Zoetrope. Use when starting work on the engine, navigating monorepo packages, or checking feature status.
+description: Root router and architectural index for ZoetropeJS. Use when starting work on the engine, navigating monorepo packages, or checking feature status.
 ---
 
-# Zoetrope Router & Workflow
+# ZoetropeJS Router & Workflow
 
-Zoetrope delivers bidirectional scroll-driven video playback on HTML5 Canvas using pre-decoded image sequences, directional LRU memory caching, and motion smoothing.
+ZoetropeJS delivers bidirectional scroll-driven video playback on HTML5 Canvas using pre-decoded image sequences, directional LRU memory caching, and motion smoothing.
 
 ## Standard 5-Step Execution Workflow
 
-1. **Check Prerequisites**: Run `pnpm zoetrope doctor` (verifies Node >=20, pnpm, FFmpeg >=6.0, ffprobe, disk space).
+1. **Check Prerequisites**: Run `pnpm zoetropejs doctor` (verifies Node >=20, pnpm, FFmpeg >=6.0, ffprobe, disk space).
 2. **Compile Clip**: Run preflight estimation before compilation:
    ```bash
    pnpm tsx skills/zoetrope-compile-video/scripts/preflight.ts clip.mp4 public/assets/hero
-   pnpm zoetrope compile clip.mp4 --out public/assets/hero --fps 24
+   pnpm zoetropejs compile clip.mp4 --out public/assets/hero --fps 24
    ```
 3. **Choose Integration**:
    - *New Site*: `pnpm tsx scripts/new-project.ts ./apps/my-app "Hero App"`
@@ -27,7 +27,7 @@ Zoetrope delivers bidirectional scroll-driven video playback on HTML5 Canvas usi
 
 | Package | Purpose | Real Export / Entrypoint |
 | :--- | :--- | :--- |
-| `packages/core` | Main orchestrator & composition | `Zoetrope`, `ZoetropeComposition` (multi-layer tracks, iris masks, cues) |
+| `packages/core` | Main orchestrator & composition | `ZoetropeJS`, `ZoetropeComposition` (multi-layer tracks, iris masks, cues) |
 | `packages/renderer` | Canvas rendering | `CanvasRenderer` (DPR, cover/contain/fill) |
 | `packages/cache` | 2-Tier memory caching | `DirectionalLRUCache`, `BlobCache`, budget detection |
 | `packages/motion` | Scroll driving & physics | `ScrollDriver`, `ExponentialSmoother`, velocity tracking |

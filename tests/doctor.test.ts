@@ -31,7 +31,7 @@ describe('Zoetrope Doctor CLI & Diagnostics', () => {
     expect(summary.allOk).toBe(true);
   });
 
-  it('runs zoetrope doctor via CLI and exits with code 0', () => {
+  it('runs zoetropejs  via CLI and exits with code 0', () => {
     const repoRoot = path.resolve(__dirname, '..');
     const res = spawnSync('pnpm', ['zoetrope', 'doctor'], {
       cwd: repoRoot,
@@ -41,7 +41,7 @@ describe('Zoetrope Doctor CLI & Diagnostics', () => {
 
     expect(res.status).toBe(0);
     const output = res.stdout.toString();
-    expect(output).toContain('Zoetrope System Diagnostics');
+    expect(output).toContain('ZoetropeJS System Diagnostics');
     expect(output).toContain('PASS');
     expect(output).toContain('[PASS] All prerequisites are satisfied');
   });

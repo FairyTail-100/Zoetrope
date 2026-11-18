@@ -1,4 +1,4 @@
-# Zoetrope Asset Compiler & Validator (`@zoetropejs/compiler`)
+# ZoetropeJS Asset Compiler & Validator (`@zoetropejs/compiler`)
 ## Production-Grade Video Extraction, Format Encoding, and Manifest Compiler
 
 ---
@@ -12,18 +12,18 @@
 - **Color Space & Aspect Ratio Preservation:** Preserves BT.709 color matrices and accurate chroma interpolation (`accurate_rnd+full_chroma_int`), supporting both `cover` (fill + crop) and `contain` (letterbox padding) aspect ratios.
 - **Resumable Content-Addressed Caching:** Hashes source media content and compilation options to make re-runs instantaneous (<1s no-op).
 - **Atomic Writes & Safe Interrupts:** Writes into isolated temporary workspaces (`.tmp-<uuid>`) and atomically commits to the output directory only upon full verification. Cleanly cleans up child processes and temp files on `AbortSignal` or `SIGINT`.
-- **Deep Offline Validator:** Includes `zoetrope validate` with fast schema checks and deep binary image header validation.
+- **Deep Offline Validator:** Includes `zoetropejs ` with fast schema checks and deep binary image header validation.
 - **Heuristic Motion-LUT Normalization:** Automatically analyzes frame-to-frame luminance differences to stretch scroll distance during rapid motion and compress static segments.
 
 ---
 
 ## 2. CLI Reference (`zoetrope`)
 
-The CLI is available directly as `zoetrope` (or `pnpm zoetrope`). Requires **Node >= 20** and **FFmpeg >= 6.0** (with `scale=in_color_matrix=bt601` support; verified by `zoetrope doctor`).
+The CLI is available directly as `zoetrope` (or `pnpm zoetropejs`). Requires **Node >= 20** and **FFmpeg >= 6.0** (with `scale=in_color_matrix=bt601` support; verified by `zoetropejs `).
 
 ```bash
-zoetrope compile <input-video> --out <output-dir> [options]
-zoetrope validate <manifest-path> [--deep] [--json]
+zoetropejs  <input-video> --out <output-dir> [options]
+zoetropejs  <manifest-path> [--deep] [--json]
 ```
 
 ### 2.1 `compile` Command Options
