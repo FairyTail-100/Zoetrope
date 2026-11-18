@@ -22,7 +22,7 @@ flowchart LR
 
 ## Install
 
-`0.1.0-rc.1` is a release candidate published under the `next` dist-tag:
+0.1.0-rc.1 is a release candidate. Both the `latest` and `next` dist-tags currently point to it.
 
 ```bash
 npm i @zoetropejs/core@next
