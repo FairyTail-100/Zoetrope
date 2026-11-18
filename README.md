@@ -165,7 +165,36 @@ Checks Node.js, pnpm, FFmpeg version and `bt601` scale filter, encoders (`libweb
 - [examples/astro](examples/astro) — Astro (`^7.4.5`) island hydration example
 - [examples/no-build](examples/no-build) — Zero-build static HTML example
 
-<!-- TODO: Add sourced comparison section -->
+## Comparison with alternatives
+
+ZoetropeJS is not benchmarked; the notes below compare approach and tradeoffs.
+
+- **`scrolly-video`** ([github.com/dkaoster/scrolly-video](https://github.com/dkaoster/scrolly-video)):
+  - JavaScript library and component suite for scroll-based video playback across vanilla JS, React, Vue, Svelte, and Astro using WebCodecs, `playbackRate`, and `currentTime`.
+  - ZoetropeJS adds an FFmpeg frame compiler, a manifest, responsive variant selection, and a bounded cache.
+- **GSAP ScrollTrigger (canvas image sequence)** ([gsap.com/docs/v3/Plugins/ScrollTrigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/)):
+  - Scroll animation plugin often paired with a preloaded `Image[]` array drawn to `<canvas>` on update.
+  - ZoetropeJS adds an FFmpeg frame compiler, a manifest, variant selection, and a bounded cache.
+- **Plain image array swapped on scroll**:
+  - Preloading an array of images and swapping `<img>` `src` or drawing to `<canvas>` by scroll index.
+  - ZoetropeJS adds an FFmpeg frame compiler, a manifest, variant selection, abort-on-reversal, and a bounded cache.
+- **All-keyframe `<video>` (`ffmpeg -g 1`) scrubbed via `currentTime`**:
+  - Re-encoding a video so every frame is an intra-frame and setting `video.currentTime` on scroll.
+  - ZoetropeJS compiles to individual image frames and renders them to `<canvas>` with a manifest and bounded cache.
+- **`@diracleo/vue-scrubbable-video`** ([npmjs.com/package/@diracleo/vue-scrubbable-video](https://www.npmjs.com/package/@diracleo/vue-scrubbable-video)):
+  - Vue package (`0.0.8`) for scrubbable video playback.
+  - ZoetropeJS is framework-agnostic at its core and compiles to image frame sequences.
+- **`reel-it`**:
+  - Not verified.
+- **Existing AI agent skills for scroll video** (e.g., [github.com/oso95/scroll-world](https://github.com/oso95/scroll-world)):
+  - `SKILL.md` agent workflow that builds scroll-scrubbed landing pages using a continuous pre-rendered video chain and a vanilla JS scrub engine.
+  - ZoetropeJS pairs its `skills/` directory with its own `@zoetropejs/compiler` and `@zoetropejs/core` runtime.
+
+### When another tool may fit
+
+- **Byte-size priority**: a single video file is typically much smaller than an extracted frame sequence; this has not been measured against ZoetropeJS output.
+- **Zero build step**: a plain `<video>` scrubbed via `currentTime` needs no frame-extraction step or manifest.
+- **Existing GSAP setup**: if you already use GSAP `ScrollTrigger` for page choreography and have a short, pre-exported image sequence, a `ScrollTrigger` canvas loop uses that existing setup.
 
 ## Contributing
 
