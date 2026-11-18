@@ -122,7 +122,7 @@ Checks Node.js, pnpm, FFmpeg version and `bt601` scale filter, encoders (`libweb
 ## Requirements
 
 - **Node.js**: `>= 20`
-- **FFmpeg**: FFmpeg `7.0.2` (CI) and `9.0.1` (local) are the versions tested; the `>= 6.0` minimum is unverified.
+- **FFmpeg**: Versions tested are 8.0.1 (CI, Ubuntu apt) and 9.0.1 (local Windows build); 7.0.2 was tested in earlier CI runs but is no longer exercised; the `>= 6.0` minimum is unverified.
   - Encoders per format: `libwebp` (WebP), `libaom-av1` (AVIF anchors), `mjpeg` (JPEG)
 - **React**: `>= 18.0.0` (when using `@zoetropejs/react`)
 
