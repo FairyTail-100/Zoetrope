@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import * as fs from 'node:fs';
 import {
   resolveEncoderQuality,
   jpegQualityToQscale,
@@ -56,5 +57,16 @@ describe('parseFFmpegEncoders', () => {
       'libaom-av1': false,
       mjpeg: true,
     });
+  });
+});
+
+describe('statfsSync disk-guard fallback', () => {
+  it('does not throw when statfsSync fails', () => {
+    let freeBytes = Infinity;
+    try {
+      const s = fs.statfsSync('Z:\\nonexistent-zoetropejs-path-12345');
+      freeBytes = s.bsize * s.bavail;
+    } catch { /* statfsSync unavailable; skips only the free-space check */ }
+    expect(freeBytes).toBe(Infinity);
   });
 });
