@@ -150,8 +150,11 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
     expect(variantText?.trim()).toBe('MOBILE');
   });
 
-  test('request storm & two-tier cache: 0 repeated requests forward, 0 requests idle 5s, 0 requests reverse', async ({ page }) => {
+  test('request storm & two-tier cache: 0 repeated requests forward, 0 requests idle 5s, 0 cache-hit re-fetches reverse', async ({ page }) => {
     // Monitor all network requests for frame assets
+    const isAssetUrl = (url: string) =>
+      url.includes('/assets/') && (url.includes('.webp') || url.includes('.bin') || url.includes('.jpg'));
+
     const assetRequests: string[] = [];
     interface TrackedRequest {
       url: string;
@@ -160,11 +163,13 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
     }
     const trackedRequests: TrackedRequest[] = [];
     const inFlightRequests = new Set<unknown>();
+    const okResponses = new WeakSet<object>();
+    const successfullyFetchedUrls = new Set<string>();
     let lastAssetRequestTime = performance.now();
 
     page.on('request', (req) => {
       const url = req.url();
-      if (url.includes('/assets/') && (url.includes('.webp') || url.includes('.bin') || url.includes('.jpg'))) {
+      if (isAssetUrl(url)) {
         const cleanUrl = url.split('?')[0];
         const now = performance.now();
         lastAssetRequestTime = now;
@@ -174,8 +179,18 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
       }
     });
 
+    page.on('response', (res) => {
+      if (res.ok()) {
+        okResponses.add(res.request());
+      }
+    });
+
     page.on('requestfinished', (req) => {
       inFlightRequests.delete(req);
+      const url = req.url();
+      if (isAssetUrl(url) && okResponses.has(req)) {
+        successfullyFetchedUrls.add(url.split('?')[0]);
+      }
     });
 
     page.on('requestfailed', (req) => {
@@ -233,7 +248,9 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
     await waitForAssetIdle(5000, 500);
 
     // Test REVERSE SCROLL: reverse from 100% back to 0%
-    // Since frames are cached in the 128MB BlobCache, reverse sweep generates near-zero new network requests!
+    // Any frame URL successfully fetched during the forward sweep is in BlobCache,
+    // so the reverse sweep must not re-request any URL from that set.
+    const forwardFetchedUrls = new Set(successfullyFetchedUrls);
     const inFlightAtReverseStart = new Set(inFlightRequests);
     const reverseStartTime = performance.now();
 
@@ -246,17 +263,18 @@ test.describe('Section 2: Smoke Test Every Example in a Real Browser', () => {
     });
     await waitForAssetIdle(5000, 500);
 
-    // Count only asset requests whose start time is after the reverse sweep begins,
+    // Inspect only asset requests whose start time is after the reverse sweep begins,
     // ignoring requests already in flight at that moment.
     const requestsDuringReverse = trackedRequests.filter(
       (r) => r.startTime >= reverseStartTime && !inFlightAtReverseStart.has(r.req)
     );
-    const newRequestsDuringReverse = requestsDuringReverse.length;
 
-    // Up to 2 requests can legitimately occur: intermediate frames near the start (e.g. frame 1 / frame_0002.webp)
-    // may have been skipped and purged from the lookahead queue during the rapid forward scrub, so they were
-    // not resident in BlobCache and must be fetched for the first time during reverse playback.
-    expect(newRequestsDuringReverse).toBeLessThanOrEqual(2);
+    // True cache-hit check: no URL successfully fetched in the forward sweep is requested again on reverse.
+    // Frames skipped/purged during the rapid forward scrub were never cached and may be fetched here.
+    const refetchedDuringReverse = requestsDuringReverse
+      .filter((r) => forwardFetchedUrls.has(r.url))
+      .map((r) => r.url);
+    expect(refetchedDuringReverse).toEqual([]);
 
     // Verify stats from engine match requestsTotal
     const stats = await page.evaluate(() => {
