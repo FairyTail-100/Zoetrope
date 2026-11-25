@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@zoetropejs/core": "workspace:*",
-    "astro": "^7.4.5"
+    "astro": "^7.4.13"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
